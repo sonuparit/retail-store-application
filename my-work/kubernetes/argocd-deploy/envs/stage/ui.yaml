@@ -1,1 +1,8 @@
 replicaCount: 1
+
+env:
+  endpoints:
+    carts: http://carts-stage-service:8080
+    catalog: http://catalog-stage-service:8080
+    checkout: http://checkout-stage-service:8080
+    orders: http://orders-stage-service:8080

@@ -1,1 +1,8 @@
 replicaCount: 1
+
+env:
+  endpoints:
+    carts: http://carts-prod-service:8080
+    catalog: http://catalog-prod-service:8080
+    checkout: http://checkout-prod-service:8080
+    orders: http://orders-prod-service:8080
