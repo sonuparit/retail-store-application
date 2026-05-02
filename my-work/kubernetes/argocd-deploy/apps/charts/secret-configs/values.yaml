@@ -2,4 +2,4 @@ secret:
   name: "external"
   
 hooks:
-  enabled: false
+  enabled: true

@@ -18,16 +18,15 @@ spec:
             - /bin/sh
             - -c
             - |
-              echo "Waiting for ExternalSecret to be Ready..."
-
-              until kubectl get externalsecret {{ .Values.externalSecret.name }} \
-                -n {{ .Release.Namespace }} \
+              echo "Waiting for ExternalSecret to be Ready..."  
+  
+              until kubectl get clustersecretstore aws-secretsmanager \
                 -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' \
                 | grep True; do
 
-                echo "Still waiting..."
+                echo "Waiting for ClusterSecretStore..."
                 sleep 5
               done
 
-              echo "ExternalSecret is ready!"
+              echo "ClusterSecretStore is ready 🚀"
 {{- end }}
