@@ -54,6 +54,16 @@ env:
   postgres:
     pgdata: "/var/lib/postgresql/data/pgdata"
 
+volume:
+  name: ""
+  path: "/var/lib/postgresql/data"
+    
+db:
+  createStorageClass: false # false for kind
+  storageClass: "standard" # For KinD
+  storageSize: 1Gi
+  hostPath: "/var/local-path-provisioner"
+
 stsSecurityContext:
   fsGroup: 999
 
@@ -67,10 +77,6 @@ dbReadinessProbe:
     command: ["pg_isready", "-d", "orders", "-U", "orders_user"]
   initialDelaySeconds: 10
   periodSeconds: 10
-
-volume:
-  name: "pg-storage"
-  path: "/var/lib/postgresql/data"
 
 service:
   type: ClusterIP
@@ -135,12 +141,6 @@ volumes:
 volumeMounts:
 - name: tmp-volume
   mountPath: /tmp
-  
-db:
-  createStorageClass: false # false for kind
-  storageClass: "standard" # For KinD
-  storageSize: 5Gi
-  hostPath: "/var/local-path-provisioner"
 
 nodeSelector: {}
 

@@ -50,14 +50,14 @@ spec:
         {{- end }}
           
         volumeMounts:
-        - name: {{ .Values.volume.name }} # MUST match the template
+        - name: {{ include "orders.fullname" . }} # MUST match the template
           mountPath: {{ .Values.volume.path | quote }}
         # subPath: not req because we are using PGDATA env var
         # subPath: postgres-db  # Keeps data in a subfolder on the disk
   
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Values.volume.name }}
+      name: {{ include "orders.fullname" . }}
     spec:
       {{- if .Values.db.createStorageClass }}
       # Need EBS CSI Driver already installed on EKS cluster

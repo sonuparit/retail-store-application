@@ -75,4 +75,5 @@ spec:
   storageClassName: {{ .Values.db.storageClass }} # Matches the STS
   hostPath:
     path: {{ .Values.db.hostPath }}
+    type: DirectoryOrCreate
 {{- end }}

@@ -1,1 +1,8 @@
 replicaCount: 1
+
+env:
+  postgres:
+    pgdata: "/var/lib/postgresql/data/"
+    
+db:
+  hostPath: /var/local-path-provisioner/orders-dev
