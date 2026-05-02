@@ -5,7 +5,7 @@ metadata:
   name: {{ include "ui.configMapName" . }}
 data:
   # Pattern: http://[Chart]-service:[Port]
-  {{- range $key, $value := .Values.ep }}
-  RETAIL_UI_ENDPOINTS_{{ $key | upper }}: {{ printf "http://%s-service:8080" $value | quote }}
+  {{- range $key, $value := .Values.env.endpoints }}
+  RETAIL_UI_ENDPOINTS_{{ $key | upper }}: {{ $value | quote }}
   {{- end }}
 {{- end }}
