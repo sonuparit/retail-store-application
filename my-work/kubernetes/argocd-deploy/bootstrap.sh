@@ -204,6 +204,57 @@ wait_for_argocd() {
     log_info "ArgoCD is ready."
 }
 
+
+# =========================================================
+# FETCH ARGOCD PASSWORD
+# =========================================================
+
+fetch_argocd_password() {
+
+    log_info "Fetching ArgoCD admin password..."
+
+    ARGO_PASSWORD=$(kubectl -n "$ARGO_NAMESPACE" get secret argocd-initial-admin-secret \
+      -o jsonpath="{.data.password}" | base64 -d)
+
+    echo ""
+    echo "========================================="
+    echo " ArgoCD Login"
+    echo "-----------------------------------------"
+    echo " URL:      http://localhost:$ARGOCD_LOCAL_PORT"
+    echo " Username: admin"
+    echo " Password: $ARGO_PASSWORD"
+    echo "========================================="
+    echo ""
+}
+
+
+# =========================================================
+# PORT FORWARD ARGOCD
+# =========================================================
+
+port_forward_argocd() {
+
+    log_info "Starting ArgoCD port-forward..."
+
+    kubectl port-forward svc/argocd-server \
+      -n "$ARGO_NAMESPACE" \
+      ${ARGOCD_LOCAL_PORT}:80 \
+      --address=0.0.0.0 \
+      > /dev/null 2>&1 &
+
+    sleep 3
+
+    echo ""
+    echo "================================================="
+    log_info "ArgoCD available at: http://localhost:$ARGOCD_LOCAL_PORT"
+    log_info "To stop port forwarding:"
+    echo "pkill -f 'kubectl port-forward'"
+    echo "Kills all port forwarding"
+    echo "================================================="
+    echo ""
+}
+
+
 # =========================================================
 # APPLY PROJECT
 # =========================================================
@@ -228,28 +279,6 @@ apply_root_app() {
     kubectl apply -f "$ROOT_APP_FILE" -n "$ARGO_NAMESPACE"
 
     log_info "Root application applied."
-}
-
-# =========================================================
-# FETCH ARGOCD PASSWORD
-# =========================================================
-
-fetch_argocd_password() {
-
-    log_info "Fetching ArgoCD admin password..."
-
-    ARGO_PASSWORD=$(kubectl -n "$ARGO_NAMESPACE" get secret argocd-initial-admin-secret \
-      -o jsonpath="{.data.password}" | base64 -d)
-
-    echo ""
-    echo "========================================="
-    echo " ArgoCD Login"
-    echo "-----------------------------------------"
-    echo " URL:      http://localhost:$ARGOCD_LOCAL_PORT"
-    echo " Username: admin"
-    echo " Password: $ARGO_PASSWORD"
-    echo "========================================="
-    echo ""
 }
 
 # =========================================================
@@ -298,31 +327,6 @@ wait_for_app() {
 }
 
 # =========================================================
-# PORT FORWARD ARGOCD
-# =========================================================
-
-port_forward_argocd() {
-
-    log_info "Starting ArgoCD port-forward..."
-
-    kubectl port-forward svc/argocd-server \
-      -n "$ARGO_NAMESPACE" \
-      ${ARGOCD_LOCAL_PORT}:80 \
-      > /dev/null 2>&1 &
-
-    sleep 3
-
-    echo ""
-    echo "================================================="
-    log_info "ArgoCD available at: http://localhost:$ARGOCD_LOCAL_PORT"
-    log_info "To stop port forwarding:"
-    echo "pkill -f 'kubectl port-forward'"
-    echo "Kills all port forwarding"
-    echo "================================================="
-    echo ""
-}
-
-# =========================================================
 # PORT FORWARD APPLICATION
 # =========================================================
 
@@ -333,6 +337,7 @@ port_forward_app() {
     kubectl port-forward svc/${APP_SERVICE} \
       -n "$APP_NAMESPACE" \
       ${APP_LOCAL_PORT}:${APP_TARGET_PORT} \
+      --address=0.0.0.0 \
       > /dev/null 2>&1 &
 
     sleep 3
@@ -381,13 +386,13 @@ main() {
 
     wait_for_argocd
     
+    fetch_argocd_password
+    
+    port_forward_argocd
+    
     apply_project
 
     apply_root_app
-    
-    port_forward_argocd
-
-    fetch_argocd_password
     
     wait_for_app
 
