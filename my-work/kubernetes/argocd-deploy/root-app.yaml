@@ -12,8 +12,6 @@ spec:
     repoURL: https://github.com/sonuparit/retail-store-reverse-engineered.git
     targetRevision: main
     path: my-work/kubernetes/argocd-deploy/root-app
-    directory:
-      recurse: true
 
   destination:
     server: https://kubernetes.default.svc
