@@ -31,6 +31,8 @@ ARGO_HELM_REPO="https://argoproj.github.io/argo-helm"
 
 ARGO_VALUES_FILE="./kind-cluster/argocd-install-values.yaml"
 
+PROJECT_FILE="argocd-project.yaml"
+
 ROOT_APP_FILE="root-app.yaml"
 
 MONITORING_NAMESPACE="monitoring"
@@ -193,6 +195,19 @@ wait_for_argocd() {
 }
 
 # =========================================================
+# APPLY PROJECT
+# =========================================================
+
+apply_project() {
+
+    info "Applying project to ArgoCD..."
+
+    kubectl apply -f "$PROJECT_FILE" -n "$ARGO_NAMESPACE"
+
+    info "Project applied."
+}
+
+# =========================================================
 # APPLY ROOT APP
 # =========================================================
 
@@ -245,6 +260,8 @@ main() {
     install_argocd
 
     wait_for_argocd
+    
+    apply_project
 
     apply_root_app
 
