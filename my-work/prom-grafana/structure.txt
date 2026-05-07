@@ -1,0 +1,21 @@
+prom-grafana/
+├── README.md
+├── screenshots/
+├── monitoring/
+│   ├── metrics-server.yaml
+│   ├── kube-prom-stack-app.yaml
+│   ├── values-monitoring.yaml
+│   └── dashboards/
+├── loki/
+│   ├── loki-app.yaml
+│   └── values-loki.yaml
+├── alerts/
+│   ├── alert-rules.yaml
+│   ├── slack-secret.yaml
+│   └── alertmanager-config.yaml
+├── service-monitors/
+│   ├── orders-monitor.yaml
+│   ├── cart-monitor.yaml
+│   └── ui-monitor.yaml
+└── architecture/
+    └── observability-architecture.png
