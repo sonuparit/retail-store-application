@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 # =========================================================
 # 🚀 Kubernetes GitOps Bootstrap Script
@@ -18,6 +18,8 @@ set -e
 # -----------------------------
 # CONFIG
 # -----------------------------
+
+PUBLIC_IP=$(curl -s ifconfig.me)
 
 CLUSTER_NAME="retail"
 
@@ -204,6 +206,23 @@ wait_for_argocd() {
     log_info "ArgoCD is ready."
 }
 
+# =========================================================
+# PORT FORWARD ARGOCD
+# =========================================================
+
+port_forward_argocd() {
+
+    log_info "Starting ArgoCD port-forward..."
+
+    kubectl port-forward svc/argocd-server \
+      -n "$ARGO_NAMESPACE" \
+      ${ARGOCD_LOCAL_PORT}:80 \
+      --address=0.0.0.0 \
+      > /dev/null 2>&1 &
+
+    sleep 3
+    
+}
 
 # =========================================================
 # FETCH ARGOCD PASSWORD
@@ -220,37 +239,10 @@ fetch_argocd_password() {
     echo "========================================="
     echo " ArgoCD Login"
     echo "-----------------------------------------"
-    echo " URL:      http://localhost:$ARGOCD_LOCAL_PORT"
+    echo " URL:      http://${PUBLIC_IP}:$ARGOCD_LOCAL_PORT"
     echo " Username: admin"
     echo " Password: $ARGO_PASSWORD"
     echo "========================================="
-    echo ""
-}
-
-
-# =========================================================
-# PORT FORWARD ARGOCD
-# =========================================================
-
-port_forward_argocd() {
-
-    log_info "Starting ArgoCD port-forward..."
-
-    kubectl port-forward svc/argocd-server \
-      -n "$ARGO_NAMESPACE" \
-      ${ARGOCD_LOCAL_PORT}:80 \
-      --address=0.0.0.0 \
-      > /dev/null 2>&1 &
-
-    sleep 3
-
-    echo ""
-    echo "================================================="
-    log_info "ArgoCD available at: http://localhost:$ARGOCD_LOCAL_PORT"
-    log_info "To stop port forwarding:"
-    echo "pkill -f 'kubectl port-forward'"
-    echo "Kills all port forwarding"
-    echo "================================================="
     echo ""
 }
 
@@ -264,8 +256,8 @@ apply_project() {
     log_info "Applying project to ArgoCD..."
 
     kubectl apply -f "$PROJECT_FILE" -n "$ARGO_NAMESPACE"
-
-    log_info "Project applied."
+    
+    echo ""
 }
 
 # =========================================================
@@ -278,7 +270,7 @@ apply_root_app() {
 
     kubectl apply -f "$ROOT_APP_FILE" -n "$ARGO_NAMESPACE"
 
-    log_info "Root application applied."
+    echo ""
 }
 
 # =========================================================
@@ -297,7 +289,7 @@ wait_for_app() {
     -n dev \
     --timeout=300s
     
-  log_info "Application is ready."
+  echo ""
 }
 
 # wait_for_app() {
@@ -357,7 +349,8 @@ port_forward_app() {
 
     sleep 3
 
-    log_info "Application available at http://localhost:$APP_LOCAL_PORT"
+    log_info "Application available at http://${PUBLIC_IP}:$APP_LOCAL_PORT"
+    echo ""
 }
 
 # =========================================================
@@ -401,9 +394,9 @@ main() {
 
     wait_for_argocd
     
-    fetch_argocd_password
-    
     port_forward_argocd
+    
+    fetch_argocd_password
     
     apply_project
 

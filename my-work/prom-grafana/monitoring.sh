@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 PUBLIC_IP=$(curl -s ifconfig.me)
 
@@ -17,11 +17,8 @@ create_namespace() {
   kubectl apply -f "${SCRIPT_DIR}/monitoring/namespace.yaml"
 
   sleep 3
-  
-  echo "========================================="
-  echo " NAMESPACE: ${NAMESPACE} CREATED"
-  echo "========================================="
 
+  echo ""
 }
 
 add_helm_repos() {
@@ -29,6 +26,7 @@ add_helm_repos() {
   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
   helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 
+  echo ""
   helm repo update
   
 }
@@ -46,11 +44,6 @@ install_metrics_server() {
     
   sleep 3
   
-  echo ""
-  echo "========================================="
-  echo "METRICS SERVER INSTALLED"
-  echo "========================================="
-
 }
 
 install_kube_prom() {
@@ -66,18 +59,13 @@ install_kube_prom() {
     
   sleep 3
 
-  echo ""
-  echo "========================================="
-  echo " kube-prometheus-stack INSTALLED"
-  echo "========================================="
-
 }
 
 wait_for_stack() {
 
   echo ""
   echo "========================================="
-  echo " WAITING FOR MONITORING STACK PODS 5 mins"
+  echo " WAITING FOR MONITORING STACK PODS max 5 mins"
   echo "========================================="
 
   kubectl wait --for=condition=Ready pod \
@@ -96,11 +84,6 @@ install_service_monitor() {
 
   kubectl apply -f "${SCRIPT_DIR}/service-monitors/argocd.yaml"
   #  -n "${NAMESPACE}" not required already present in yaml file
-    
-  echo ""
-  echo "========================================="
-  echo " SERVICE-MONITORS INSTALLED"
-  echo "========================================="
 
 }
 
@@ -116,9 +99,8 @@ prom_port_fwd() {
     --address=0.0.0.0 \
     > /tmp/prometheus-portforward.log 2>&1 &
   
-  echo ""
-  echo "access prometheus at: "
-  echo -n "http://${PUBLIC_IP}:9090"
+
+  echo "access prometheus at: http://${PUBLIC_IP}:9090"
 
 }
 
@@ -136,9 +118,7 @@ grafana_port_fwd() {
     
     # > /dev/null 2>&1 &
 
-  echo ""
-  echo "access grafana at: "
-  echo -n "http://${PUBLIC_IP}:3000"
+  echo "access grafana at: http://${PUBLIC_IP}:3000"
 
 }
 
@@ -148,8 +128,7 @@ grafana_passwd() {
     kube-prom-stack-grafana -o \
     jsonpath='{.data.admin-password}' \
     | base64 -d && echo)
-
-  echo ""
+  
   echo "grafana password: $GRAFANA_PASS"
 
 }
