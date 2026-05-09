@@ -5,7 +5,11 @@ server:
     enabled: true
     serviceMonitor:
       enabled: true
-      namespace: monitoring
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8083"
+        prometheus.io/path: "/metrics"
 
 configs:
   params:
@@ -19,7 +23,11 @@ controller:
     enabled: true
     serviceMonitor:
       enabled: true
-      namespace: monitoring
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8082"
+        prometheus.io/path: "/metrics"
 
 repoServer:
   autoscaling:
@@ -28,11 +36,19 @@ repoServer:
     enabled: true
     serviceMonitor:
       enabled: true
-      namespace: monitoring
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8084"
+        prometheus.io/path: "/metrics"
     
 applicationSet:
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
-      namespace: monitoring
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
