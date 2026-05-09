@@ -3,11 +3,9 @@ server:
     type: ClusterIP   # we will expose later via ingress
   metrics:
     enabled: true
-    service:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8083"
-        prometheus.io/path: "/metrics"
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
 
 configs:
   params:
@@ -19,28 +17,22 @@ controller:
   replicas: 1
   metrics:
     enabled: true
-    service:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8082"
-        prometheus.io/path: "/metrics"
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
 
 repoServer:
   autoscaling:
     enabled: false
   metrics:
     enabled: true
-    service:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8084"
-        prometheus.io/path: "/metrics"
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
     
 applicationSet:
   metrics:
-    enabled: true  
-    service:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
-        prometheus.io/path: "/metrics"
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
