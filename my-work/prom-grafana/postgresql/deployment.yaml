@@ -22,48 +22,51 @@ spec:
 
     spec:
       containers:
-      - name: postgres-exporter
+        - name: postgres-exporter
 
-        image: quay.io/prometheuscommunity/postgres-exporter:v0.15.0
+          image: quay.io/prometheuscommunity/postgres-exporter:v0.18.0
 
-        ports:
-        - containerPort: 9187
-          name: metrics
+          ports:
+            - containerPort: 9187
+              name: metrics
 
-        envFrom:
-        - secretRef:
-            name: postgres-exporter-secret
+          envFrom:
+            - secretRef:
+                name: postgres-exporter-secret
 
-        resources:
-          requests:
-            cpu: 50m
-            memory: 64Mi
+          args:
+            - "--disable-settings-metrics"
+            - "--disable-default-metrics"
 
-          limits:
-            cpu: 200m
-            memory: 256Mi
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
 
-        readinessProbe:
-          httpGet:
-            path: /metrics
-            port: 9187
-            scheme: HTTP
+            limits:
+              cpu: 200m
+              memory: 256Mi
 
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-
-
-        livenessProbe:
-          httpGet:
-            path: /metrics
-            port: 9187
-            scheme: HTTP
-
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
+#          readinessProbe:
+#            httpGet:
+#              path: /metrics
+#              port: 9187
+#              scheme: HTTP
+#
+#            initialDelaySeconds: 20
+#           periodSeconds: 10
+#            timeoutSeconds: 5
+#            successThreshold: 1
+#            failureThreshold: 5
+#
+#          livenessProbe:
+#            httpGet:
+#              path: /metrics
+#              port: 9187
+#              scheme: HTTP
+#
+#            initialDelaySeconds: 90
+#            periodSeconds: 20
+#            timeoutSeconds: 10
+#            successThreshold: 1
+#            failureThreshold: 5
