@@ -398,13 +398,13 @@ main() {
     
     fetch_argocd_password
     
-    apply_project
+#    apply_project
 
-    apply_root_app
+#    apply_root_app
     
-    wait_for_app
+#    wait_for_app
 
-    port_forward_app
+#    port_forward_app
 
     # show_status
 

@@ -164,7 +164,7 @@ monitoring() {
   
   grafana_passwd
   
-  install_postgre_exporter
+#  install_postgre_exporter
   
   echo ""
   echo "========================================="
