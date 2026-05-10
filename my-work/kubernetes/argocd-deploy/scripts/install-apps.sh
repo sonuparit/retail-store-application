@@ -28,9 +28,9 @@ ARGO_NAMESPACE="argocd"
 
 APP_SERVICE="ui-dev-service"
 
-APP_LOCAL_PORT="8888"
+APP_LOCAL_PORT=8888
 
-APP_TARGET_PORT="8080"
+APP_TARGET_PORT=8080
 
 # -----------------------------
 # COLORS
@@ -70,22 +70,69 @@ apply_root_app() {
     echo ""
 }
 
+detect_namespaces() {
+
+  log_info "Waiting for application namespaces..."
+  
+  sleep 15
+
+  local retries=40
+  local count=0
+
+  while true
+  do
+
+    ENVIRONMENTS=$(kubectl get ns -o jsonpath='{.items[*].metadata.name}' \
+      | tr ' ' '\n' \
+      | grep -E '^(dev|stage|prod)$' || true)
+
+    if [ -n "$ENVIRONMENTS" ]
+    then
+      break
+    fi
+
+    sleep 5
+
+    count=$((count + 1))
+
+    if [ "$count" -ge "$retries" ]
+    then
+      log_error "No application namespaces detected."
+      exit 1
+    fi
+
+  done
+
+  log_info "Namespaces detected:"
+  echo "$ENVIRONMENTS"
+  echo ""
+}
+
 # =========================================================
 # WAIT FOR APP
 # =========================================================
 
 wait_for_app() {
 
-  log_info "Waiting for Application..."
-  
-  sleep 30
-  
-  kubectl wait \
-    --for=condition=Available \
-    deployment/orders-dev-dep \
-    -n dev \
-    --timeout=300s
-    
+  for ENV in $ENVIRONMENTS
+  do
+
+    log_info "Waiting for deployments in ${ENV}"
+
+    until kubectl get deployment -n "$ENV" | grep -q .
+    do
+      sleep 5
+    done
+
+    kubectl wait \
+      --for=condition=Available \
+      deployment \
+      --all \
+      -n "$ENV" \
+      --timeout=300s
+
+  done
+
   echo ""
 }
 
@@ -96,22 +143,36 @@ wait_for_app() {
 port_forward_app() {
 
     log_info "Starting application port-forward..."
+    
+    INDEX=0
 
-    kubectl port-forward svc/${APP_SERVICE} \
-      -n "$APP_NAMESPACE" \
-      ${APP_LOCAL_PORT}:${APP_TARGET_PORT} \
-      --address=0.0.0.0 \
-      > /dev/null 2>&1 &
+    for ENV in $ENVIRONMENTS
+    do
 
-    sleep 3
+      SERVICE="ui-${ENV}-service"
 
-    log_info "Application available at http://${PUBLIC_IP}:$APP_LOCAL_PORT"
-    echo ""
+      PORT=$((APP_LOCAL_PORT + INDEX))
+
+      kubectl port-forward \
+        svc/${SERVICE} \
+        -n "$ENV" \
+        ${PORT}:${APP_TARGET_PORT} \
+        --address=0.0.0.0 \
+        > /dev/null 2>&1 &
+
+      INDEX=$((INDEX + 1))
+      
+      log_info "Application available at http://${PUBLIC_IP}:$PORT"
+      echo ""
+
+    done
 }
 
 install_apps() {
 
   apply_root_app
+  
+  detect_namespaces
   
   wait_for_app
 
