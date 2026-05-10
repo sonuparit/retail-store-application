@@ -2,6 +2,49 @@
 
 set -euo pipefail
 
+# =======================================
+# 🚀 Kubernetes GitOps Bootstrap Script
+# =======================================
+# Purpose:
+# Recreate complete local platform automatically:
+#
+# - monitoring stack
+#
+# =======================================
+
+# -----------------------------
+# CONFIG
+# -----------------------------
+
+EBS_DEVICE="/dev/nvme1n1"
+
+EBS_MOUNT_PATH="/mnt/postgre-data"
+
+# -----------------------------
+# COLORS
+# -----------------------------
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# -----------------------------
+# LOGGING HELPERS
+# -----------------------------
+
+log_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
 PUBLIC_IP=$(curl -s ifconfig.me)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
