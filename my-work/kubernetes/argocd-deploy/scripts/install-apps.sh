@@ -82,7 +82,7 @@ wait_for_app() {
   
   kubectl wait \
     --for=condition=Available \
-    deployment/orders-dev \
+    deployment/orders-dev-dep \
     -n dev \
     --timeout=300s
     
