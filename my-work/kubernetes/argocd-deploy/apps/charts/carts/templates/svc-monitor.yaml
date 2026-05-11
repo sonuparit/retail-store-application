@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 
 metadata:
-  name: {{ include "orders.fullname" . }}-exp-svc-mon
+  name: {{ include "carts.fullname" . }}-svc-mon
 
   labels:
     release: kube-prometheus-stack
@@ -15,11 +15,11 @@ spec:
 
   selector:
     matchLabels:
-      app: {{ include "orders.fullname" . }}-exp-svc
+      {{- include "carts.selectorLabels" . | nindent 6 }}
 
   endpoints:
-  - port: metrics
-    path: /metrics
+  - port: http
+    path: /actuator/prometheus
     interval: 15s
     
     relabelings:

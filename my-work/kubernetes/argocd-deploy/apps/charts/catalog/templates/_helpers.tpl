@@ -40,6 +40,8 @@ helm.sh/chart: {{ include "catalog.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app: {{ .Chart.Name }}
+env: {{ .Release.Namespace }}
 {{- end }}
 
 {{/*

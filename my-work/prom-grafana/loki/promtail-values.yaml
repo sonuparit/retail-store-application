@@ -1,0 +1,104 @@
+# promtail-values.yaml
+
+config:
+
+  clients:
+    - url: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+
+  snippets:
+
+    pipelineStages:
+
+      # Parse docker logs
+      - docker: {}
+
+      # Parse JSON logs from applications
+      - json:
+          expressions:
+            level:
+            message:
+            trace_id:
+            service:
+            env:
+
+      # Convert extracted fields into Loki labels
+      - labels:
+          level:
+          service:
+          env:
+
+  scrapeConfigs:
+
+    - job_name: kubernetes-pods
+
+      kubernetes_sd_configs:
+        - role: pod
+
+      pipeline_stages:
+
+        - docker: {}
+
+        # JSON parsing
+        - json:
+            expressions:
+              level:
+              message:
+              trace_id:
+              service:
+              env:
+
+        # Promote JSON fields to labels
+        - labels:
+            level:
+            service:
+            env:
+
+      relabel_configs:
+
+        # Namespace label
+        - source_labels:
+            - __meta_kubernetes_namespace
+          target_label: namespace
+
+        # Pod label
+        - source_labels:
+            - __meta_kubernetes_pod_name
+          target_label: pod
+
+        # Container label
+        - source_labels:
+            - __meta_kubernetes_pod_container_name
+          target_label: container
+
+        # App label
+        - source_labels:
+            - __meta_kubernetes_pod_label_app
+          target_label: app
+
+        # Environment label from pod labels
+        - source_labels:
+            - __meta_kubernetes_pod_label_env
+          target_label: env
+
+        # Node label
+        - source_labels:
+            - __meta_kubernetes_pod_node_name
+          target_label: node
+
+        # Log path
+        - replacement: /var/log/pods/*$1/*.log
+          separator: /
+          source_labels:
+            - __meta_kubernetes_pod_uid
+            - __meta_kubernetes_pod_container_name
+          target_label: __path__
+
+resources:
+
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
