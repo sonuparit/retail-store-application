@@ -18,7 +18,7 @@ spec:
       {{- include "orders.selectorLabels" . | nindent 6 }}
 
   endpoints:
-  - port: http
+  - port: 8080
     path: /actuator/prometheus
     interval: 15s
     

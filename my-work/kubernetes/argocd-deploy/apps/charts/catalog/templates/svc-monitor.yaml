@@ -18,8 +18,8 @@ spec:
       {{- include "catalog.selectorLabels" . | nindent 6 }}
 
   endpoints:
-  - port: http
-    path: /actuator/prometheus
+  - port: 8080
+    path: /metrics
     interval: 15s
     
     relabelings:
