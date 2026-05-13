@@ -43,8 +43,8 @@ spec:
                   namespace: dev
                 - env: stage
                   namespace: stage
-                - env: prod
-                  namespace: prod
+#                - env: prod
+#                  namespace: prod
 
   template:
     metadata:
