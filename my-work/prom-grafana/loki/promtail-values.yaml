@@ -34,6 +34,12 @@ config:
       kubernetes_sd_configs:
         - role: pod
 
+          namespaces:
+            names:
+              - dev
+              - stage
+              - prod
+
       pipeline_stages:
 
         - docker: {}
@@ -59,7 +65,7 @@ config:
         - source_labels:
             - __meta_kubernetes_namespace
           regex: dev|stage|prod
-          action: keep
+        #  action: keep
 
         # Namespace label
         - source_labels:
