@@ -55,6 +55,12 @@ config:
 
       relabel_configs:
 
+        # Keep only app namespaces
+        - source_labels:
+            - __meta_kubernetes_namespace
+          regex: dev|stage|prod
+          action: keep
+
         # Namespace label
         - source_labels:
             - __meta_kubernetes_namespace
@@ -75,7 +81,7 @@ config:
             - __meta_kubernetes_pod_label_app
           target_label: app
 
-        # Environment label from pod labels
+        # Environment label
         - source_labels:
             - __meta_kubernetes_pod_label_env
           target_label: env
