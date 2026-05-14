@@ -89,9 +89,10 @@ livenessProbe:
     path: /health
     port: http
   # just to check
-  initialDelaySeconds: 30
-  timeoutSeconds: 5
+  initialDelaySeconds: 60
   periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
   
 # readinessProbe:
 #   httpGet:
