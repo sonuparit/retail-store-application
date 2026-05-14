@@ -65,6 +65,7 @@ alertmanager:
       - name: default-receiver
 
   alertmanagerSpec:
+    replicas: 1
     storage:
       volumeClaimTemplate:
         spec:
