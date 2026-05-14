@@ -1,0 +1,119 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kubernetes-basic-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+
+spec:
+  groups:
+
+    - name: kubernetes-basic-alerts
+      interval: 30s
+
+      rules:
+
+        # ---------------------------------------------------
+        # Pod CrashLoopBackOff
+        # ---------------------------------------------------
+        - alert: PodCrashLooping
+
+          expr: |
+            increase(kube_pod_container_status_restarts_total[5m]) > 3
+
+          for: 2m
+
+          labels:
+            severity: warning
+            category: kubernetes
+
+          annotations:
+            summary: "Pod restarting frequently"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} restarted more than 3 times within 5 minutes."
+
+
+        # ---------------------------------------------------
+        # Deployment Replicas Unavailable
+        # ---------------------------------------------------
+        - alert: DeploymentReplicasMismatch
+
+          expr: |
+            kube_deployment_status_replicas_available
+              <
+            kube_deployment_spec_replicas
+
+          for: 3m
+
+          labels:
+            severity: critical
+            category: kubernetes
+
+          annotations:
+            summary: "Deployment replicas unavailable"
+            description: "Deployment {{ $labels.namespace }}/{{ $labels.deployment }} does not have desired replicas available."
+
+
+        # ---------------------------------------------------
+        # Node Not Ready
+        # ---------------------------------------------------
+        - alert: KubernetesNodeNotReady
+
+          expr: |
+            kube_node_status_condition{condition="Ready",status="true"} == 0
+
+          for: 2m
+
+          labels:
+            severity: critical
+            category: infrastructure
+
+          annotations:
+            summary: "Kubernetes node not ready"
+            description: "Node {{ $labels.node }} has been NotReady for more than 2 minutes."
+
+
+        # ---------------------------------------------------
+        # High CPU Usage
+        # ---------------------------------------------------
+        - alert: HighCPUUsage
+
+          expr: |
+            (
+              sum(rate(container_cpu_usage_seconds_total{container!="",image!=""}[5m])) by (pod, namespace)
+              /
+              sum(kube_pod_container_resource_limits{resource="cpu"}) by (pod, namespace)
+            ) > 0.80
+
+          for: 5m
+
+          labels:
+            severity: warning
+            category: resource
+
+          annotations:
+            summary: "High CPU usage"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} CPU usage exceeded 80%."
+
+
+        # ---------------------------------------------------
+        # High Memory Usage
+        # ---------------------------------------------------
+        - alert: HighMemoryUsage
+
+          expr: |
+            (
+              sum(container_memory_working_set_bytes{container!="",image!=""}) by (pod, namespace)
+              /
+              sum(kube_pod_container_resource_limits{resource="memory"}) by (pod, namespace)
+            ) > 0.85
+
+          for: 5m
+
+          labels:
+            severity: warning
+            category: resource
+
+          annotations:
+            summary: "High memory usage"
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} memory usage exceeded 85%."

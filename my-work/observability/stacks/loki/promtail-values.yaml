@@ -65,7 +65,7 @@ config:
         - source_labels:
             - __meta_kubernetes_namespace
           regex: dev|stage|prod
-        #  action: keep
+          action: keep
 
         # Namespace label
         - source_labels:

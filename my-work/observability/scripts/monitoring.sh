@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # =======================================
-# 🚀 Kubernetes GitOps Bootstrap Script
+# 🚀 Kubernetes monitoring Bootstrap Script
 # =======================================
 # Purpose:
 # Recreate complete local platform automatically:
@@ -16,9 +16,11 @@ set -euo pipefail
 # CONFIG
 # -----------------------------
 
-EBS_DEVICE="/dev/nvme1n1"
+PUBLIC_IP=$(curl -s ifconfig.me)
 
-EBS_MOUNT_PATH="/mnt/postgre-data"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+NAMESPACE="monitoring"
 
 # -----------------------------
 # COLORS
@@ -45,19 +47,13 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-PUBLIC_IP=$(curl -s ifconfig.me)
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-NAMESPACE="monitoring"
-
 create_namespace() {
 
   echo "========================================="
   echo " CREATING NAMESPACE"
   echo "========================================="
 
-  kubectl apply -f "${SCRIPT_DIR}/../monitoring/namespace.yaml"
+  kubectl apply -f "${SCRIPT_DIR}/../stacks/kube-state-metrics/namespace.yaml"
 
   echo ""
 }
@@ -81,7 +77,7 @@ install_metrics_server() {
 
   helm upgrade --install metrics-server metrics-server/metrics-server \
     -n kube-system \
-    -f "${SCRIPT_DIR}/../monitoring/metrics-server.yaml"
+    -f "${SCRIPT_DIR}/../stacks/kube-state-metrics/metrics-server.yaml"
   
 }
 
@@ -94,7 +90,7 @@ install_kube_prom() {
 
   helm upgrade --install kube-prom-stack prometheus-community/kube-prometheus-stack \
     -n "${NAMESPACE}" \
-    -f "${SCRIPT_DIR}/../monitoring/values-monitoring.yaml"
+    -f "${SCRIPT_DIR}/../stacks/prometheus-stack/prom-grafana-values.yaml"
 
 }
 
@@ -161,6 +157,39 @@ grafana_passwd() {
 
 }
 
+install_loki() {
+
+  echo ""
+  log_info "INSTALLING LOKI"
+  
+  helm repo add grafana https://grafana.github.io/helm-charts
+  helm install loki grafana/loki \
+  -n "${NAMESPACE}" \
+  -f "${SCRIPT_DIR}/../stacks/loki/loki-values.yaml"
+
+}
+
+increase_inotify_limit() {
+
+  echo ""
+  log_info "INCREASING INOTIFY LIMIT TO 10000"
+  
+  fs.inotify.max_user_instances=10000
+  fs.inotify.max_user_watches=1048576
+
+}
+
+install_promtail() {
+
+  echo ""
+  log_info "INSTALLING PROMTAIL"
+  
+  helm install promtail grafana/promtail \
+  -n "${NAMESPACE}" \
+  -f "${SCRIPT_DIR}/../stacks/loki/promtail-values.yaml"
+
+}
+
 monitoring() {
 
   create_namespace
@@ -178,6 +207,12 @@ monitoring() {
   grafana_port_fwd
   
   grafana_passwd
+  
+  install_loki
+  
+  increase_inotify_limit
+  
+  install_promtail
   
   echo ""
   echo "========================================="
