@@ -1,11 +1,11 @@
 prometheus:
   enabled: true
   prometheusSpec:
-    retention: 7d
-      #    additionalScrapeConfigsSecret:
-      # enabled: true
-      # name: additional-scrape-configs
-      # key: ../postgresql/additional-scrape-configs.yaml
+    retention: 5d
+    #    additionalScrapeConfigsSecret:
+    # enabled: true
+    # name: additional-scrape-configs
+    # key: ../postgresql/additional-scrape-configs.yaml
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -13,83 +13,52 @@ prometheus:
           accessModes: [ "ReadWriteOnce" ]
           resources:
             requests:
-              storage: 2Gi
-
+              storage: 1Gi
     serviceMonitorSelectorNilUsesHelmValues: false
 
 grafana:
   enabled: true
-
   adminPassword: admin123
-
   service:
     type: ClusterIP
-
   persistence:
     enabled: true
-    size: 5Gi
-
+    storageClassName: standard
+    size: 1Gi
   ingress:
     enabled: false
-
   defaultDashboardsEnabled: true
-
   resources:
     requests:
       memory: 256Mi
       cpu: 100m
-
     limits:
       memory: 512Mi
       cpu: 500m
 
 alertmanager:
   enabled: true
-
-  alertmanagerSpec:
-    replicas: 1
-
   config:
     global:
       resolve_timeout: 5m
-
     route:
-      receiver: "default-receiver"
-
+      receiver: default-receiver
+      group_by: [ alertname, namespace ]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 3h
     receivers:
-      - name: "default-receiver"
-
-# alertmanager:
-#   enabled: true
-
-#   config:
-#     global:
-#       resolve_timeout: 5m
-
-#     route:
-#       receiver: default-receiver
-
-#       group_by:
-#         - alertname
-#         - namespace
-
-#       group_wait: 30s
-#       group_interval: 5m
-#       repeat_interval: 3h
-
-#     receivers:
-#       - name: default-receiver
-
-#   alertmanagerSpec:
-#     replicas: 1
-#     storage:
-#       volumeClaimTemplate:
-#         spec:
-#           accessModes: ["ReadWriteOnce"]
-
-#           resources:
-#             requests:
-#               storage: 1Gi 
+      - name: default-receiver
+  alertmanagerSpec:
+    replicas: 1
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: standard
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 1Gi
 
 kubeStateMetrics:
   enabled: true
