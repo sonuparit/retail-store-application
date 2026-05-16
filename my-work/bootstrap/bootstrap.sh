@@ -24,7 +24,7 @@ EBS_MOUNT_PATH="/mnt/postgre-data"
 
 CLUSTER_NAME="retail"
 
-KIND_CONFIG="../infrastructure/kind-cluster/kind-config.yaml"
+KIND_CONFIG="../01-infrastructure/kind-cluster/kind-config.yaml"
 
 PUBLIC_IP=$(curl -s ifconfig.me)
 
