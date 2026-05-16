@@ -12,11 +12,8 @@ spec:
     - 'https://charts.external-secrets.io'
     
   destinations:
-    - namespace: platform
-      server: https://kubernetes.default.svc
-    - namespace: external-secrets
-      server: https://kubernetes.default.svc
-    - namespace: argocd
+    # namespace platform, external-secrets, argocd
+    - namespace: '*'
       server: https://kubernetes.default.svc
       
   clusterResourceWhitelist:
@@ -35,17 +32,15 @@ spec:
   description: Project for observability layer deployment
   
   sourceRepos:
-    - 'https://github.com/sonuparit/retail-store-reverse-engineered.git' # Restrict to your repo
-    - 'https://prometheus-community.github.io/helm-charts' # Allow official Helm repos
-    - 'https://kubernetes-sigs.github.io/metrics-server' # Allow metrics-server repos
-    - 'https://grafana.github.io/helm-charts' # Allow grafana loki repos
+    - '*'
+    # https://github.com/sonuparit/retail-store-reverse-engineered.git' # Restrict to my repo
+    # https://prometheus-community.github.io/helm-charts' # Allow official Helm repos
+    # https://kubernetes-sigs.github.io/metrics-server' # Allow metrics-server repos
+    # https://grafana.github.io/helm-charts' # Allow grafana loki repos
     
   destinations:
-    - namespace: observability
-      server: https://kubernetes.default.svc
-    - namespace: external-secrets
-      server: https://kubernetes.default.svc
-    - namespace: argocd
+    # namespace observability, argocd, external-secrets, kubesystem, etc
+    - namespace: '*'
       server: https://kubernetes.default.svc
   # Monitoring needs to create ClusterRoles and CRDs
   clusterResourceWhitelist:
@@ -68,15 +63,16 @@ spec:
     - 'https://charts.external-secrets.io'
     
   destinations:
-    - namespace: dev
+    # namespace dev, stage, prod, external-secrets, argocd etc
+    - namespace: 'dev'
       server: https://kubernetes.default.svc
-    - namespace: stage
+    - namespace: 'stage'
       server: https://kubernetes.default.svc
-    - namespace: prod
+    - namespace: 'prod'
       server: https://kubernetes.default.svc
-    - namespace: external-secrets
+    - namespace: 'external-secrets'
       server: https://kubernetes.default.svc
-    - namespace: argocd
+    - namespace: 'argocd'
       server: https://kubernetes.default.svc
       
   clusterResourceWhitelist:
