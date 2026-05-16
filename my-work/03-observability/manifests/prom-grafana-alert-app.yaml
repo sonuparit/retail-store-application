@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-stack
+  namespace: argocd
+  
+spec:
+  project: observability
+  source:
+    repoURL: 'https://prometheus-community.github.io/helm-charts'
+    chart: kube-prometheus-stack
+    targetRevision: 45.0.0
+    helm:
+      valueFiles:
+        - $values/my-work/03-observability/prometheus-stack/prom-grafana-alert-values.yaml
+
+    - repoURL: 'https://github.com/sonuparit/retail-store-reverse-engineered.git'
+      targetRevision: main
+      ref: values
+      
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: observability
+
+  syncPolicy:
+    automated: 
+      prune: true 
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
