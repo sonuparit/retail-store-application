@@ -14,5 +14,10 @@ spec:
     server: https://kubernetes.default.svc
     namespace: platform
   syncPolicy:
-    automated: { prune: true, selfHeal: true }
-    syncOptions: [CreateNamespace=true]
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - SkipDryRunOnMissingResource=true # 👈 Critical for CRD-dependent resources
+      - ApplyOutOfSyncOnly=true
