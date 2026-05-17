@@ -1,29 +1,61 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
-
+kind: ApplicationSet
 metadata:
-  name: root-app
+  name: cluster-infrastructure-bootstrap
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io # Ensures cascading deletion
-
 spec:
-  project: default
+  # 1. 🔹 The Traffic Cop: This forces step-by-step sequencing based on health
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      steps:
+        - matchExpressions:
+            - key: tier
+              operator: In
+              values: ["platform"]       # Step 1: Wait until this is 100% Healthy
+        - matchExpressions:
+            - key: tier
+              operator: In
+              values: ["observability"]  # Step 2: Then trigger this tier
 
-  source:
-    repoURL: https://github.com/sonuparit/retail-store-reverse-engineered.git
-    targetRevision: main
-    path: my-work/bootstrap/layers/
+  # 2. The Blueprint Matrix
+  generators:
+    - list:
+        elements:
+          - layer: platform-layer
+            path: my-work/02-platform/manifests
+            project: platform
+            tier: platform
 
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: argocd
-      
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-      - SkipDryRunOnMissingResource=true # 👈 Critical for CRD-dependent resources
-      - ApplyOutOfSyncOnly=true
+          - layer: observability-layer
+            path: my-work/03-observability/manifests
+            project: observability
+            tier: observability
+
+  # 3. The Target Application Template
+  template:
+    metadata:
+      name: "{{layer}}"
+      namespace: argocd
+      labels:
+        tier: "{{tier}}" 
+        
+    spec:
+      project: "{{project}}"
+      source:
+        repoURL: https://github.com/sonuparit/retail-store-reverse-engineered.git
+        targetRevision: main
+        path: "{{path}}"
+        
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+        
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - SkipDryRunOnMissingResource=true # 👈 Critical for CRD-dependent resources
+          - ApplyOutOfSyncOnly=true

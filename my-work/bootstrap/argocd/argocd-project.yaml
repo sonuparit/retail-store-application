@@ -8,7 +8,7 @@ spec:
   description: Project for platform layer deployment
   
   sourceRepos:
-    - 'https://github.com/sonuparit/retail-store-reverse-engineered.git' # Restrict to your repo
+    - 'https://github.com/sonuparit/retail-store-reverse-engineered.git' # Restrict to repo only
     - 'https://charts.external-secrets.io'
     
   destinations:
