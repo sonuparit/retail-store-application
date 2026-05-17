@@ -3,7 +3,11 @@ kind: Application
 metadata:
   name: metrics-server
   namespace: argocd
+
 spec:
+  dependsOn:
+    - name: platform-layer
+    
   project: observability 
   
   sources:

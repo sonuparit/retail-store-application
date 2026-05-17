@@ -5,6 +5,9 @@ metadata:
   namespace: argocd
   
 spec:
+  dependsOn:
+    - name: platform-layer
+
   project: observability
   source:
     repoURL: https://github.com/sonuparit/retail-store-reverse-engineered.git
