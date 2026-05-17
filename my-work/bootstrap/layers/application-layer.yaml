@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: retail-apps-deployment
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10" # Deployment Order #3
+spec:
+  project: retail-app
+  source:
+    repoURL: https://github.com/sonuparit/retail-store-reverse-engineered.git
+    path: my-work/04-applications/kubernetes/argocd-deploy/manifests
+    targetRevision: main
+    
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd # ApplicationSets must live in the argocd namespace
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - SkipDryRunOnMissingResource=true

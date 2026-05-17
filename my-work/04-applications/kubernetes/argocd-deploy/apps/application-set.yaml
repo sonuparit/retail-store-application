@@ -13,17 +13,17 @@ spec:
             - key: wave
               operator: In
               values:
-                - "2" # ArgoCD waits for 'secrets' (Wave 2) to be Healthy
+                - "12" # ArgoCD waits for 'secrets' (Wave 2) to be Healthy
         - matchExpressions:
             - key: wave
               operator: In
               values:
-                - "3" # Then it moves to carts, catalog, etc. (Wave 3)
+                - "13" # Then it moves to carts, catalog, etc. (Wave 3)
         - matchExpressions:
             - key: wave
               operator: In
               values:
-                - "4" # Finally it deploys the UI (Wave 4)
+                - "14" # Finally it deploys the UI (Wave 4)
 
   generators:
     - matrix:
@@ -33,27 +33,27 @@ spec:
               elements:
                 - name: secrets
                   chartPath: "charts/secret-configs"
-                  wave: "2" # Matches the first step above
+                  wave: "12" # Matches the first step above
                   
                 - name: carts
                   chartPath: charts/carts
-                  wave: "3" # Matches the second step
+                  wave: "13" # Matches the second step
 
                 - name: catalog
                   chartPath: charts/catalog
-                  wave: "3"
+                  wave: "13"
 
                 - name: checkout
                   chartPath: charts/checkout
-                  wave: "3"
+                  wave: "13"
 
                 - name: orders
                   chartPath: charts/orders
-                  wave: "3"
+                  wave: "13"
 
                 - name: ui
                   chartPath: charts/ui
-                  wave: "4" # Matches the third step
+                  wave: "14" # Matches the third step
 
           # 🔹 Environments
           - list:

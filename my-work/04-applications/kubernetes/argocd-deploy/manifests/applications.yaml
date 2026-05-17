@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: retail-app
+  namespace: argocd
+  
+spec:
+  project: retail-app
+  source:
+    repoURL: https://github.com/sonuparit/retail-store-reverse-engineered.git
+    path: my-work/04-applications/kubernetes/argocd-deploy/apps
+    targetRevision: main
+    directory:
+      recurse: false
+      
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: retail-app
+    
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true]
