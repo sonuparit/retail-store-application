@@ -3,11 +3,11 @@ kind: ApplicationSet
 metadata:
   name: retail-matrix
   namespace: argocd
+
 spec:
-  # 1. Define the strategy for Progressive Rollouts
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
+    type: RollingSync
+    rollingSync:
       steps:
         - matchExpressions:
             - key: wave

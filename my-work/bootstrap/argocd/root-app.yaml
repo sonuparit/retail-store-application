@@ -3,11 +3,11 @@ kind: ApplicationSet
 metadata:
   name: cluster-infrastructure-bootstrap
   namespace: argocd
+  
 spec:
-  # 1. 🔹 The Traffic Cop: This forces step-by-step sequencing based on health
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
+    type: RollingSync
+    rollingSync:
       steps:
         - matchExpressions:
             - key: tier
