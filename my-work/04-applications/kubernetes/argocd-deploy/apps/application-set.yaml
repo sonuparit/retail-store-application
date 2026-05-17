@@ -60,10 +60,10 @@ spec:
               elements:
                 - env: dev
                   namespace: dev
-#                - env: stage
-#                  namespace: stage
-#                - env: prod
-#                  namespace: prod
+                - env: stage
+                  namespace: stage
+                - env: prod
+                  namespace: prod
 
   template:
     metadata:
