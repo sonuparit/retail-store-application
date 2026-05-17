@@ -17,7 +17,17 @@ spec:
     namespace: observability
     
   syncPolicy:
-    automated: { prune: true, selfHeal: true }
-    syncOptions: 
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
       - CreateNamespace=true
       - RespectSyncWave=true
+      - SkipDryRunOnMissingResource=true
+      
+    retry:
+      limit: 10
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m

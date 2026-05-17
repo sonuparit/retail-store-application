@@ -5,17 +5,30 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-10" # Deployment Order #1
+    
 spec:
   project: platform
   source:
     repoURL: https://github.com/sonuparit/retail-store-reverse-engineered.git
     path: my-work/02-platform/manifests
     targetRevision: main
+    
   destination:
     server: https://kubernetes.default.svc
     namespace: platform
+    
   syncPolicy:
-    automated: { prune: true, selfHeal: true }
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - RespectSyncWave=true
+      - SkipDryRunOnMissingResource=true
+      
+    retry:
+      limit: 10
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m

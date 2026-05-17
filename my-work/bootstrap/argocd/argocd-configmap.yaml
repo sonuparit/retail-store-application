@@ -7,35 +7,44 @@ metadata:
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
 data:
-  # 🔹 Enforce health checks on the Application resource type itself
+  # 🔹 Total-Locking Health assessment to eliminate timing uncertainties
   resource.customizations.health.argoproj.io_Application: |
     hs = {}
-    if obj.status ~= nil and obj.status.health ~= nil then
-      -- Capture the current child application health status
-      local status = obj.status.health.status
-      hs.status = status
-      
-      if obj.status.health.message ~= nil then
-        hs.message = obj.status.health.message
-      end
-      
-      -- If the child app is Synced but still initializing pods, mark it as Progressing
-      if status == "Progressing" then
-        hs.message = "Waiting for all underlying pods and deployments to become ready."
-        return hs
-      elseif status == "Degraded" then
-        hs.message = "Child application deployment has failed or degraded."
-        return hs
-      elseif status == "Missing" then
-        hs.status = "Progressing"
-        hs.message = "Child application resources are missing from the cluster. Initializing..."
-        return hs
-      end
-      
+    
+    -- 1. Structural Catch: If status fields don't exist yet, halt immediately.
+    if obj.status == nil or obj.status.health == nil or obj.status.health.status == nil then
+      hs.status = "Progressing"
+      hs.message = "Sync Lock: Initializing health and synchronization status structures..."
       return hs
     end
-    
-    -- Fallback safety state if status has not yet been populated by the controller
-    hs.status = "Progressing"
-    hs.message = "Initializing child application tree loop..."
+
+    local health_status = obj.status.health.status
+    local sync_status = (obj.status.sync and obj.status.sync.status) or "Unknown"
+
+    -- 2. Prevent Premature Clearance: If the app says Healthy but is STILL Syncing manifests, LOCK IT.
+    if sync_status == "Syncing" or sync_status == "Unknown" then
+      hs.status = "Progressing"
+      hs.message = "Sync Lock: Controller is actively transmitting or reconciling manifests. Current Sync State: " .. sync_status
+      return hs
+    end
+
+    -- 3. Hard Halt on Failure: If ANY resource inside this layer goes Degraded, fail immediately
+    -- to prevent your root-app from silently swallowing the error and moving on.
+    if health_status == "Degraded" then
+      hs.status = "Degraded"
+      hs.message = "CRITICAL: Underling layer resources have entered a Degraded state."
+      return hs
+    end
+
+    -- 4. The Ultimate Gatekeeper: Even if health is 'Healthy', double-check that it is 
+    -- also fully 'Synced'. If it is 'OutOfSync', background modifications are happening. Lock it.
+    if health_status ~= "Healthy" or sync_status ~= "Synced" then
+      hs.status = "Progressing"
+      hs.message = "Sync Lock: Layer is unstable or out-of-sync. (Health: " .. health_status .. ", Sync: " .. sync_status .. ")"
+      return hs
+    end
+
+    -- 5. Only when it is explicitly Healthy AND fully Synced do we unlock the wave
+    hs.status = "Healthy"
+    hs.message = "Layer is 100% Synced, static, and running green."
     return hs
