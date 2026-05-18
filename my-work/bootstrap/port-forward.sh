@@ -59,7 +59,7 @@ port_forward_argocd() {
     8080:80 --address=0.0.0.0 \
     > /tmp/argocd-portforward.log 2>&1 &
 
-  sleep 2
+  sleep 5
     
 }
 
@@ -96,7 +96,7 @@ prom_port_fwd() {
 
   log_info "access prometheus at: http://${PUBLIC_IP}:9090"
   
-  sleep 2
+  sleep 5
 
 }
 
@@ -111,18 +111,17 @@ grafana_port_fwd() {
     -n "${NAMESPACE}" 3000:80 --address=0.0.0.0 \
     > /tmp/grafana-portforward.log 2>&1 &
     
-  sleep 2
+  sleep 5
 }
 
 grafana_passwd() {
 
   echo ""
   log_info "Fetching Grafana admin password..."
-
-  GRAFANA_PASS=$(kubectl get secret -n "${NAMESPACE}" \
-    kube-prom-stack-grafana -o \
-    jsonpath='{.data.admin-password}' \
-    | base64 -d && echo)
+  
+  GRAFANA_PASS=$(kubectl get secret prometheus-stack-grafana \
+  -n "${NAMESPACE}" -o jsonpath='{.data.admin-password}' \
+  | base64 -d && echo)
 
   echo ""
   echo "========================================="
@@ -149,23 +148,7 @@ alert_mngr_port_fwd() {
 
   log_info "access alertmanager at: http://${PUBLIC_IP}:9093"
   
-  sleep 2
-}
-
-loki_port_fwd() {
-
-  echo ""
-  echo "========================================="
-  log_info " STARTING LOKI PORT FORWARD..."
-  echo "========================================="
-
-  kubectl port-forward svc/loki-stack 3100:3100 \
-    -n "${NAMESPACE}" --address=0.0.0.0 \
-    > /tmp/loki-portforward.log 2>&1 &
-
-  log_info "access loki at: http://${PUBLIC_IP}:3100"
-  
-  sleep 2
+  sleep 5
 }
 
 app_port_fwd() {
@@ -181,7 +164,7 @@ app_port_fwd() {
 
   log_info "access app at: http://${PUBLIC_IP}:8080"
   
-  sleep 2
+  sleep 5
 
 }
 
@@ -208,8 +191,6 @@ port_forwarding_main() {
   grafana_passwd
   
   alert_mngr_port_fwd
-  
-  loki_port_fwd
   
   app_port_fwd
   
