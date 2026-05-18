@@ -22,6 +22,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 NAMESPACE="observability"
 
+ARGO_NAMESPACE="argocd"
+
 # -----------------------------
 # COLORS
 # -----------------------------
@@ -47,10 +49,41 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-prom_port_fwd() {
+port_forward_argocd() {
 
   echo ""
-  log_info "don't forget to open the ports"
+  log_info "Starting ArgoCD port-forward..."
+
+  kubectl port-forward svc/argocd-server \
+    -n "${ARGO_NAMESPACE}" \
+    8080:80 --address=0.0.0.0 \
+    > /tmp/argocd-portforward.log 2>&1 &
+
+  sleep 2
+    
+}
+
+fetch_argocd_password() {
+
+  echo ""
+  log_info "Fetching ArgoCD admin password..."
+
+  ARGO_PASSWORD=$(kubectl -n "${ARGO_NAMESPACE}" get secret argocd-initial-admin-secret \
+    -o jsonpath="{.data.password}" | base64 -d)
+
+  echo ""
+  echo "========================================="
+  log_info " ArgoCD Login"
+  echo "-----------------------------------------"
+  echo " URL:      http://${PUBLIC_IP}:8080"
+  echo " Username: admin"
+  echo " Password: ${ARGO_PASSWORD}"
+  echo "========================================="
+  echo ""
+
+}
+
+prom_port_fwd() {
 
   echo ""
   echo "========================================="
@@ -58,11 +91,12 @@ prom_port_fwd() {
   echo "========================================="
   
   kubectl port-forward svc/prometheus-stack-kube-prom-prometheus \
-    9090:9090 -n "${NAMESPACE}" \
-    --address=0.0.0.0 \
+    -n "${NAMESPACE}" 9090:9090 --address=0.0.0.0 \
     > /tmp/prometheus-portforward.log 2>&1 &
 
   log_info "access prometheus at: http://${PUBLIC_IP}:9090"
+  
+  sleep 2
 
 }
 
@@ -74,26 +108,31 @@ grafana_port_fwd() {
   echo "========================================="
   
   kubectl port-forward svc/prometheus-stack-grafana \
-    3000:80 -n "${NAMESPACE}" \
-    --address=0.0.0.0 \
+    -n "${NAMESPACE}" 3000:80 --address=0.0.0.0 \
     > /tmp/grafana-portforward.log 2>&1 &
+    
+  sleep 2
 }
 
 grafana_passwd() {
 
   echo ""
-  echo "========================================="
-  log_info " GRAFANA PASSWORD..."
-  echo "-----------------------------------------"
+  log_info "Fetching Grafana admin password..."
 
   GRAFANA_PASS=$(kubectl get secret -n "${NAMESPACE}" \
     kube-prom-stack-grafana -o \
     jsonpath='{.data.admin-password}' \
     | base64 -d && echo)
-    
-  log_info "access grafana at: http://${PUBLIC_IP}:3000"
-  log_info "grafana password : $GRAFANA_PASS"
+
+  echo ""
+  echo "========================================="
+  log_info " Grafana Login"
   echo "-----------------------------------------"
+  echo " URL:      http://${PUBLIC_IP}:3000"
+  echo " Username: admin"
+  echo " Password: ${GRAFANA_PASS}"
+  echo "========================================="
+  echo ""
 
 }
 
@@ -104,13 +143,13 @@ alert_mngr_port_fwd() {
   log_info " STARTING ALERTMANAGER PORT FORWARD..."
   echo "========================================="
 
-  kubectl port-forward \
-    -n "${NAMESPACE}" \
-    svc/prometheus-stack-kube-prom-alertmanager \
-    9093:9093 --address=0.0.0.0 \
+  kubectl port-forward svc/prometheus-stack-kube-prom-alertmanager \
+    -n "${NAMESPACE}" 9093:9093 --address=0.0.0.0 \
     > /tmp/alertmanager-portforward.log 2>&1 &
 
   log_info "access alertmanager at: http://${PUBLIC_IP}:9093"
+  
+  sleep 2
 }
 
 loki_port_fwd() {
@@ -120,13 +159,13 @@ loki_port_fwd() {
   log_info " STARTING LOKI PORT FORWARD..."
   echo "========================================="
 
-  kubectl port-forward \
-    -n "${NAMESPACE}" \
-    svc/loki-stack 3100:3100 \
-    --address=0.0.0.0 \
+  kubectl port-forward svc/loki-stack 3100:3100 \
+    -n "${NAMESPACE}" --address=0.0.0.0 \
     > /tmp/loki-portforward.log 2>&1 &
 
   log_info "access loki at: http://${PUBLIC_IP}:3100"
+  
+  sleep 2
 }
 
 app_port_fwd() {
@@ -137,15 +176,18 @@ app_port_fwd() {
   echo "========================================="
   
   kubectl port-forward svc/ui-dev-service \
-    8080:8080 -n dev \
-    --address=0.0.0.0 \
+    8080:8080 -n dev --address=0.0.0.0 \
     > /tmp/app-portforward.log 2>&1 &
 
   log_info "access app at: http://${PUBLIC_IP}:8080"
+  
+  sleep 2
 
 }
 
 port_forwarding_main() {
+
+  pkill -f "kubectl port-forward" || true
 
   echo ""
   log_info "don't forget to open the ports"
@@ -154,6 +196,10 @@ port_forwarding_main() {
   echo "========================================="
   log_info " RUNNING PORT FORWARD"
   echo "========================================="
+  
+  port_forward_argocd
+  
+  fetch_argocd_password
 
   prom_port_fwd
   
@@ -171,6 +217,7 @@ port_forwarding_main() {
   echo "========================================="
   log_info " PORT FORWARD COMPLETED SUCCESSFULLY"
   echo "========================================="
+  echo ""
 
 }
 
