@@ -18,14 +18,11 @@ spec:
         # Pod CrashLoopBackOff
         # ---------------------------------------------------
         - alert: PodCrashLooping
-        
-          expr: increase(kube_pod_container_status_restarts_total[1m]) > 1
-          for: 30s
 
-          # expr: |
-          #   increase(kube_pod_container_status_restarts_total[5m]) > 3
+          expr: |
+            increase(kube_pod_container_status_restarts_total[5m]) > 3
 
-          # for: 2m
+          for: 2m
 
           labels:
             severity: warning
