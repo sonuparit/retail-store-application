@@ -1,0 +1,34 @@
+server:
+  service:
+    type: ClusterIP   # we will expose later via ingress
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
+
+configs:
+  params:
+    server.insecure: true   # easier for local / kind
+  cm:
+    application.instanceLabelKey: argocd.argoproj.io/instance
+
+controller:
+  replicas: 1
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
+
+repoServer:
+  autoscaling:
+    enabled: false
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
+    
+applicationSet:
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
