@@ -4,7 +4,7 @@ metadata:
   name: kubernetes-basic-alerts
   namespace: observability
   labels:
-    release: kube-prom-stack
+    release: prometheus-stack
 
 spec:
   groups:
