@@ -1,6 +1,10 @@
 server:
   service:
     type: ClusterIP   # we will expose later via ingress
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
 
 configs:
   params:
@@ -10,9 +14,21 @@ configs:
 
 controller:
   replicas: 1
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
 
 repoServer:
   autoscaling:
     enabled: false
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
     
-applicationSet:
+# applicationSet:
+#  metrics:
+#    enabled: true
+#    serviceMonitor:
+#      enabled: true
