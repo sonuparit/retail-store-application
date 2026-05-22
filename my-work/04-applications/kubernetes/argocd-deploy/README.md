@@ -451,12 +451,12 @@ This section walks through deploying the full multi-environment GitOps setup on 
 
 **Steps:**
 
-1. Clone the repo and get into `helmfile-deploy`
+1. Clone the repo and get into `argocd-deploy`
 
     ```bash
     git clone https://github.com/sonuparit/retail-store-reverse-engineered.git
 
-    cd /retail-store-reverse-engineered/my-work/kubernetes/helmfile-deploy/
+    cd /retail-store-reverse-engineered/my-work/kubernetes/argocd-deploy/
     ```
 
     ![alt text](screenshots/screenshot52.png)

@@ -1,4 +1,4 @@
-# 🚀 Centralized logging with Loki
+# 🚀 Observability layer Implementation
 
 [intro] 1 line
 
@@ -7,27 +7,37 @@
 1. [Overview]()
 2. [Architecture]()
 3. [Repository Structure]()
-4. [Deployment Guide]()
-5. [Tech Stack]()
-6. [What This Project Demonstrates]()
-7. [Architectural Decisions]()
-8. [My Implementations]()
-  - [Metrics Observability]()
-  - [Centralized Logging]()
-  - [Alerting Pipeline]()
-  - [Multi-Environment Monitoring]()
+4. [Tech Stack]()
+5. [Core Features]()
+6. [Implementation Highlights]()
+7. [Deployment Guide]()
+8. [Architectural Decisions]()
 9. [Operational Outcomes]()
 10. [Challenges & Solutions]()
-11. [What I Learned]()
-12. [Why This Matters]()
-13. [What's Next]()
-14. [Final Thoughts]()
+    - [Summary Only]()
+    - Read full section [(here)](./challenges_&_solutions.md)
+11. [Key Learnings]()
+12. [Future Improvements]()
 
-## Overview
+## 📖 Overview
 
-[intro] 1 line
+This project implements a production-style Kubernetes observability and GitOps platform focused on monitoring, centralized logging, alerting, deployment orchestration, and multi-environment management.
 
-[Content] bullet points
+The platform integrates:
+
+- Prometheus + Grafana for metrics and visualization
+- Loki + Promtail for centralized logging
+- Alertmanager for real-time alerting
+- ArgoCD for GitOps-based continuous deployment
+- PostgreSQL monitoring through exporter-based telemetry collection
+
+It was designed to simulate real-world operational workflows including:
+
+- multi-environment deployments (`dev`, `stage`, `prod`)
+- dependency-aware deployments
+- layered repository architecture
+- RBAC-aware GitOps management
+- Kubernetes-native observability practices
 
 ## Architecture
 
@@ -39,35 +49,136 @@
 
 [intro] 1 line
 
-[repo structure]
+```txt
+.
+├── README.md
+├── alertmanager
+│   ├── application
+│   ├── infrastructure
+│   ├── kubernetes
+│   ├── secrets
+│   └── test
+├── argocd
+│   ├── service-monitors
+│   └── services
+├── kube-state-metrics
+├── loki
+├── manifests
+├── postgresql
+├── prometheus-stack
+└── screenshots
 
-## Deployment Guide
+```
 
-[intro] 1 line
+## 🛠️ Tech Stack
 
-[Points with bullets]
+### ☸️ Container Orchestration
 
-## Tech Stack
+- Kubernetes
+- Kind (Kubernetes in Docker)
+
+### 🚀 GitOps & Deployment
+
+- ArgoCD
+- Helm
+- Helm Charts
+
+### 📦 Infrastructure & Platform
+
+- External Secrets Operator (ESO)
+
+### 📊 Monitoring & Metrics
+
+- Prometheus
+- Prometheus Operator
+- kube-prometheus-stack
+- Grafana
+- postgres-exporter
+- kube-state-metrics
+
+### 📜 Logging & Observability
+
+- Loki
+- Promtail
+- Grafana Explore
+
+### 🚨 Alerting
+
+- Alertmanager
+- Slack Webhooks
+- Email Notifications
+
+### 🗄️ Database
+
+- PostgreSQL
+
+### 🔐 Security & Access Control
+
+- RBAC
+- ArgoCD Projects
+- Principle of Least Privilege (PoLP)
+
+### 🌐 Networking & Service Discovery
+
+- Kubernetes Services
+- Headless Services
+- CoreDNS
+
+### ⚙️ Automation & Scripting
+
+- Bash
+- YAML
+- Lua (ArgoCD Health Checks)
+
+### 🧩 CI/CD & Configuration Management
+
+- GitOps Workflow
+- Declarative Kubernetes Manifests
+- Environment-based Helm templating
+
+### 🖥️ Operating System & Runtime
+
+- Linux
+- Docker
+
+### 🔍 Observability Concepts Implemented
+
+- Centralized Logging
+- Metrics Collection
+- Multi-Environment Monitoring
+- Dependency-Aware Deployments
+- Health-Based Rollout Synchronization
+- Environment Labeling
+- Runtime Telemetry Collection
 
 [intro] 1 line
 
 [Content] bullet points
 
-## What This Project Demonstrates
+## 🚀 Core Features
 
-[intro] 1 line
+## 🚀 Core Features
 
-[Points with bullets]
+This platform implements a production-style Kubernetes observability and GitOps workflow focused on scalability, operational visibility, deployment reliability, and multi-environment management.
 
-## Architectural Decisions
+- GitOps-based continuous deployment using ArgoCD
+- Multi-environment Kubernetes deployments (`dev`, `stage`, `prod`)
+- Centralized metrics collection using Prometheus
+- Centralized logging using Loki + Promtail
+- Real-time alerting with Alertmanager
+- PostgreSQL monitoring using `postgres-exporter`
+- Grafana dashboards for metrics visualization
+- Environment-aware monitoring and logging
+- Kubernetes-native monitoring using `ServiceMonitor`
+- Layered deployment orchestration
+- Helm-based reusable deployments
+- RBAC-aware ArgoCD Project segmentation
+- Centralized observability workflows
+- Declarative Kubernetes configuration management
 
-[intro] 1 line
+## ⚙️ Implementation Highlights
 
-[Points with bullets]
-
-# ⚙️ My Implementations
-
-## 📊 Monitoring Stack Deployment
+### 📊 Monitoring Stack Deployment
 
 Installed a production-oriented monitoring stack using Helm charts:
 
@@ -84,6 +195,7 @@ kube-prometheus-stack
 ```
 
 This provided:
+
 - Centralized metrics collection
 - Kubernetes cluster monitoring
 - Grafana dashboard integration
@@ -91,13 +203,12 @@ This provided:
 - Alertmanager
 - ServiceMonitor CRDs
 
----
-
-## 🔍 ServiceMonitor-Based Metrics Discovery
+### 🔍 ServiceMonitor-Based Metrics Discovery
 
 Implemented Kubernetes-native monitoring using `ServiceMonitor` resources instead of annotation-based scraping.
 
 Created dedicated `ServiceMonitor` manifests for microservices to enable:
+
 - automatic target discovery
 - Prometheus Operator integration
 - environment-aware monitoring
@@ -108,13 +219,12 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 ```
 
----
-
-## 🧪 Operational Validation on Single Microservice
+### 🧪 Operational Validation on Single Microservice
 
 Before scaling observability cluster-wide, initially tested monitoring integration on a single microservice (Catalog).
 
 Validated:
+
 - metrics endpoint exposure
 - Prometheus target discovery
 - ServiceMonitor selectors
@@ -123,13 +233,12 @@ Validated:
 
 This reduced debugging complexity and enabled controlled observability rollout.
 
----
-
-## 🧩 Helmified ServiceMonitors for Multi-Environment Deployment
+### 🧩 Helmified ServiceMonitors for Multi-Environment Deployment
 
 Converted observability resources into reusable Helm templates to support scalable multi-service and multi-environment deployments.
 
 Helmified:
+
 - labels
 - Services
 - ServiceMonitors
@@ -137,6 +246,7 @@ Helmified:
 - namespace-aware monitoring
 
 Successfully implemented centralized metrics aggregation for:
+
 - carts
 - checkout
 - orders
@@ -144,11 +254,13 @@ Successfully implemented centralized metrics aggregation for:
 - ui
 
 across env:
+
 - dev
 - stage
 - prod
 
 This enabled:
+
 - reusable monitoring architecture
 - centralized observability
 - environment-aware metrics discovery
@@ -156,26 +268,24 @@ This enabled:
 - simplified GitOps workflows
 - scalable Kubernetes monitoring
 
----
-
-## 💾 Loki & Promtail Deployment with Persistent Storage
+### 💾 Loki & Promtail Deployment with Persistent Storage
 
 Installed Loki and Promtail using Helm charts with custom `values.yaml` configuration.
 
 Implemented:
+
 - PVC-backed persistent storage
 - filesystem-based log retention
 - Promtail Kubernetes discovery
 - resource-aware deployment configuration
 
 This ensured:
+
 - persistent log storage
 - centralized log ingestion
 - scalable observability architecture
 
----
-
-## 🪵 Centralized Logging via Loki
+### 🪵 Centralized Logging via Loki
 
 Implemented centralized Kubernetes logging using:
 
@@ -186,6 +296,7 @@ Implemented centralized Kubernetes logging using:
 to aggregate logs from all microservices into a centralized observability platform.
 
 Enabled:
+
 - label-based log querying
 - namespace-aware filtering
 - application-specific log searches
@@ -203,13 +314,12 @@ and:
 {env="stage"}
 ```
 
----
-
-## 🏷️ Helmified Environment & Application Labeling Strategy
+### 🏷️ Helmified Environment & Application Labeling Strategy
 
 Helmified Kubernetes metadata labeling to standardize observability across multiple microservices and environments.
 
 Implemented reusable labels for:
+
 - application identification
 - environment separation
 - namespace-aware observability
@@ -224,36 +334,37 @@ metadata:
 ```
 
 This enabled:
+
 - clean metrics filtering
 - centralized log separation
 - multi-environment observability
 - Grafana label-based queries
 - reusable environment-aware deployments
 
-
-## ⚔️ Troubleshooting & Operational Problem Solving
+### ⚔️ Troubleshooting & Operational Problem Solving
 
 Resolved multiple production-oriented observability challenges during implementation, including:
 
 - Prometheus target discovery failures
 - ServiceMonitor selector mismatches
-- incorrect ServiceMonitor port configuration
-- environment label propagation
+- Incorrect ServiceMonitor port configuration
+- Environment label propagation
 - Promtail CrashLoopBackOff
 - Loki integration issues
 - Linux filesystem watcher exhaustion
 - Kubernetes service-to-container port mapping confusion
+- Understood Postgre exporter architecture
 
 This significantly improved operational understanding of:
+
 - Prometheus Operator internals
 - Kubernetes networking
 - Centralized logging architecture
 - Linux kernel tuning
 - Observability scaling considerations
+- Postgre exporter
 
----
-
-## 📊 Observability Validation
+### 📊 Observability Validation
 
 Validated the complete observability pipeline through:
 
@@ -264,6 +375,7 @@ Validated the complete observability pipeline through:
 - PromQL Queries
 
 Successfully verified:
+
 - metrics scraping
 - multi-environment monitoring
 - centralized logging
@@ -271,317 +383,289 @@ Successfully verified:
 - application-level telemetry
 - Kubernetes metadata enrichment
 
+## Deployment Guide
+
+This section walks through deploying the full multi-environment GitOps setup on a kind Kubernetes cluster running on EC2.
+
+### Prerequisites
+
+**Infra:**
+
+1. ***`EC2 instance`** (recommended flex.large for multi env)*
+
+    ![alt text](screenshots/screenshot50.png)
+
+2. ***`EBS volume`** attached to EC2 and mounted for orders service*
+
+    ![alt text](screenshots/screenshot17.png)
+
+3. ***`Dynamodb`** for carts service with:*
+
+    ```bash
+    table: Item   |  index: idx_global_cutomerId
+        id: id     |    key: customerId
+    ```
+
+    ![alt text](screenshots/screenshot33.png)
+
+4. ***`AWS Sercrets Manager`** with secrets configured:*
+
+    ![alt text](screenshots/screenshot04.png)
+
+5. ***`IAM role for EC2`** with permissions:*
+
+    ![alt text](screenshots/screenshot30.png)
+
+    - dynamodb read and write access
+    - secrets manager read access
+
+6. ***`Metadata response hop limit`** for EC2 set to: `5`*
+
+    ![alt text](screenshots/screenshot32.png)
+
+**Tools:**
+
+1. Docker installed and running
+2. kubectl
+3. helm
+4. Kind
+
+**Steps:**
+
+1. Clone the repo and get into `bootstrap`
+
+    ```bash
+    git clone https://github.com/sonuparit/retail-store-reverse-engineered.git
+
+    cd /retail-store-reverse-engineered/my-work/bootstrap/
+    ```
+
+    ![alt text](screenshots/screenshot52.png)
+
+2. Run the script:
+
+    ```bash
+    chmod 700 bootstrap.sh
+    bash bootstrap.sh
+    ```
+
+3. Once ArgoCD shows all apps green in UI, run second script:
+
+    ```bash
+    chmod 700 port-forward.sh
+    bash port-forward.sh
+    ```
+
+## 🏗️ Architectural Decisions
+
+The platform was designed around GitOps, layered infrastructure separation, and production-style observability practices to improve scalability, operational reliability, and maintainability.
+
+### 1. GitOps-First Deployment Model
+
+- **The Decision:**\
+  Adopted ArgoCD as the single deployment controller to ensure declarative, continuously reconciled infrastructure and application delivery.
+
+- **Why:**
+
+  - Centralized deployment management
+  - Drift detection and reconciliation
+  - Improved deployment consistency
+  - Easier environment scalability
+
 ---
 
-## Operational Outcomes
+### 2. Layered Repository Architecture
 
-[intro] 1 line
+- **The Decision:**\
+  Separated the repository into dedicated layers:
 
-[Content] bullet points
+  - Infrastructure Layer
+  - Platform Layer
+  - Observability Layer
+  - Application Layer
 
-## ⚔️ Challenges & Solutions
+- **Why:**
 
-[intro] 1 line
+  - Clear separation of concerns
+  - Easier dependency management
+  - Safer permission boundaries
+  - Improved operational maintainability
 
-### 1. Prometheus Annotations Were Not Being Scraped
+---
 
-- **⚔️ Challenge:**\
-Initially, application pods exposed Prometheus annotations like:
+### 3. Dependency-Aware Deployment Sequencing
 
-  ```yaml
-  prometheus.io/scrape: "true"
-  prometheus.io/port: "8080"
-  prometheus.io/path: "/actuator/prometheus"
-  ```
+- **The Decision:**\
+  Implemented layered deployment synchronization using:
 
-  However, no application metrics appeared in Prometheus targets.
+  - ArgoCD Sync Waves
+  - Custom Lua Health Checks
 
-- **🔍 Root Cause:**\
-  The cluster was deployed using `kube-prometheus-stack`, which relies on the **Prometheus Operator** and primarily discovers targets using:
+- **Why:**
+
+  - Prevent race conditions
+  - Ensure foundational services become healthy before dependent deployments
+  - Improve deployment reliability
+
+---
+
+### 4. Prometheus Operator-Based Monitoring
+
+- **The Decision:**\
+  Used `kube-prometheus-stack` with:
 
   - `ServiceMonitor`
   - `PodMonitor`
 
-  instead of annotation-based scraping.
+  instead of annotation-only scraping.
 
-- **✅ Solution:**\
-  Implemented dedicated `ServiceMonitor` resources for each microservice.
+- **Why:**
 
-  ```yaml
-  apiVersion: monitoring.coreos.com/v1
-  kind: ServiceMonitor
-  ```
-
-  **This enabled:**
-  - Kubernetes-native metric discovery
+  - Kubernetes-native target discovery
   - Declarative monitoring configuration
-  - Automatic target generation by Prometheus Operator
+  - Better scalability and maintainability
 
 ---
 
-### 2. ServiceMonitor Validation Failure
+### 5. Environment-Based Observability Segregation
 
-- **⚔️ Challenge:**\
-  ArgoCD synchronization failed with:
+- **The Decision:**\
+  Implemented namespace-driven environment labeling for:
 
-  ```text
-  spec.endpoints[0].port in body must be of type string
-  ```
+  - Metrics
+  - Logs
+  - Dashboards
+  - Queries
 
-- **🔍 Root Cause:**\
-  `ServiceMonitor.endpoints.port` was incorrectly configured using an integer:
+- **Why:**
 
-  ```yaml
-  port: 8080
-  ```
+  - Clean multi-environment separation
+  - Faster troubleshooting
+  - Safer production observability workflows
 
-  instead of a Service port name.
+---
 
-- **✅ Solution:**\
-  Updated ServiceMonitor configuration to use named ports:
+### 6. Centralized Logging Architecture
 
-  ```yaml
-  port: http
-  ```
+- **The Decision:**\
+  Implemented:
 
-  which matched the Kubernetes Service port definition.
+  - Loki for log storage
+  - Promtail for log collection
+  - Grafana for log exploration
 
-### 3. Label-Based Environment Monitoring
+  with Kubernetes metadata enrichment and relabeling.
 
-- **⚔️ Challenge:**\
-  Metrics and logs needed to be separated cleanly between:
+- **Why:**
 
-  - dev
-  - stage
-  - prod
+  - Centralized cluster-wide logging
+  - Label-based querying
+  - Easier debugging across environments and services
 
-  environments.
+---
 
-- **🔍 Root Cause:**\
-  Without environment labels, observability data becomes difficult to filter and query across multiple namespaces.
+### 7. Exporter-Based Telemetry Collection
 
-- **✅ Solution:**\
-  Implemented namespace-driven environment labels through Helm templating.
+- **The Decision:**\
+  Used dedicated exporters such as:
 
-  ```yaml
-  env: {{ .Release.Namespace }}
-  ```
+  - `postgres-exporter`
 
-  This enabled environment-aware queries such as:
+  instead of embedding monitoring logic directly into applications.
 
-  ```promql
-  {env="stage"}
-  ```
+- **Why:**
 
-  and:
+  - Decoupled observability architecture
+  - Standardized Prometheus metrics exposure
+  - Easier monitoring scalability
 
-  ```logql
-  {env="prod"}
-  ```
+---
 
-### 4. Loki + Promtail Centralized Logging Integration
+### 8. Principle of Least Privilege (PoLP)
 
-- **⚔️ Challenge:**\
-  Implementing centralized logging with:
+- **The Decision:**\
+  Implemented scoped ArgoCD Projects and resource separation.
 
-  - Loki
-  - Promtail
-  - Grafana
+- **Why:**
 
-  while maintaining Kubernetes-native discovery and metadata labeling.
+  - Reduced blast radius
+  - Safer GitOps operations
+  - Better production-grade security posture
 
-- **🔍 Root Cause:**\
-  Promtail requires:
+---
 
-  - proper Kubernetes service discovery
-  - relabeling
-  - metadata enrichment
-  - filesystem log access
+### 9. Helm-Based Configuration Standardization
 
-  for accurate log ingestion.
+- **The Decision:**\
+  Standardized deployments using reusable Helm templating.
 
-- **✅ Solution:**\
-  Configured Promtail with:
+- **Why:**
 
-  - Kubernetes pod discovery
-  - relabeling
-  - namespace labels
-  - app labels
-  - container labels
+  - Environment consistency
+  - Reduced configuration duplication
+  - Easier scaling across multiple environments
 
-  ```yaml
-  relabel_configs:
-    - source_labels:
-        - __meta_kubernetes_namespace
-      target_label: namespace
-  ```
+---
 
-  This enabled:
+### 10. Kubernetes-Native Observability Stack
 
-  - centralized logging
-  - label-based filtering
-  - multi-environment log queries
-  - Grafana Explore integration
+- **The Decision:**\
+  Built the entire monitoring and logging pipeline using Kubernetes-native controllers and CRDs.
 
-### 5. Promtail CrashLoopBackOff (`too many open files`)
+- **Why:**
 
-- **⚔️ Challenge:**\
-  Promtail repeatedly crashed with:
+  - Better ecosystem integration
+  - Declarative infrastructure management
+  - Easier operational automation
+  - Production-style observability workflows
 
-  ```text
-  failed to make file target manager: too many open files
-  ```
+---
 
-- **🔍 Root Cause:**\
-  Promtail creates filesystem watchers for Kubernetes container logs.  
-  The node-level Linux inotify limits were too low for:
+## 📈 Operational Outcomes
 
-  - multiple namespaces
-  - monitoring stack logs
-  - microservices
-  - cluster-wide log discovery
+This implementation resulted in a production-style Kubernetes observability platform with improved deployment reliability, centralized visibility, and scalable operational workflows.
 
-- **✅ Solution:**\
-  Increased Linux kernel inotify limits:
-
-  ```bash
-  fs.inotify.max_user_instances=10000
-  fs.inotify.max_user_watches=1048576
-  ```
-
-  <details>
-  <summary>
-  Make the changes permanent
-  </summary>
-
-  The `sysctl -w` command only changes the limits in memory. If your node reboots, the error will return. To make them permanent:
-
-  1. Open the configuration file:
-
-  ```bash
-  sudo nano /etc/sysctl.conf
-
-  ```
-
-  1. Add these lines to the bottom of the file:
-
-  ```text
-  fs.inotify.max_user_instances=10000
-  fs.inotify.max_user_watches=1048576
-
-  ```
-
-  1. Save and exit, then apply them:
-
-  ```bash
-  sudo sysctl -p
-
-  ```
-
-  </details>
-
-  **Additionally:**\
-  optimized Promtail discovery scope to reduce unnecessary log ingestion.
-
-  This resolved:
-
-  - Promtail CrashLoopBackOff
-  - file descriptor exhaustion
-  - filesystem watcher saturation
-
-### 6. Multi-Environment Observability Architecture
-
-- **⚔️ Challenge:**\
-  Avoid repetitive monitoring manifests for every microservice and needed production-oriented observability across:
-
-  - multiple namespaces
-  - multiple environments
-  - multiple microservices
-
-- **🔍 Root Cause:**\
-  Hardcoded monitoring resources increase operational overhead and reduce scalability.
-
-- **✅ Solution:**\
-  Implemented reusable Helm templating for:
-
-  - labels
-  - Services
-  - ServiceMonitors
-  - environment-aware metadata
-
-  This enabled:
-
-  - reusable deployment patterns
-  - scalable monitoring architecture
-  - cleaner GitOps workflows
-  
-### 6. Containers restarting again and again
-
-  Linveness probe was too agressive
-
-  Increased liveness probe delay time 
-  
-  
-  
-The reason Alertmanager didn't appear initially, and now it does, is due to how the **Prometheus Operator** (the controller managing your stack) handles configurations.
-
-When you use the `kube-prometheus-stack`, you aren't creating Pods directly; you are providing a "recipe" to the Operator. If that recipe has a logical error, the Operator simply refuses to cook—meaning it won't even attempt to create the Pods.
-
-Here are the three specific things I changed and why they were blocking you:
-
-### 1. The "Empty Receiver" Validation
-
-In your original file, you defined a receiver named `default-receiver`, but it had no configuration (no email, no slack, no webhook).
-
-* **The Problem:** Alertmanager has a strict validation check. A receiver must have at least one integration. Because yours was empty, the configuration was technically "invalid."
-* **The Fix:** I added a placeholder `webhook_config` (pointing to localhost). This satisfied the validation check, allowing the Operator to accept the configuration and start the Pod.
-
-### 2. Explicit Storage Class
-
-In your `alertmanagerSpec`, you had a `volumeClaimTemplate` but didn't specify a `storageClassName`.
-
-* **The Problem:** While some clusters have a "default" storage class, many (especially on AWS/EKS or manual installs) require you to be explicit. If the Operator tried to create a Persistent Volume Claim (PVC) without a valid class, the process would hang or fail before the Pod could even be scheduled.
-* **The Fix:** I explicitly set it to `standard` to match your Prometheus configuration.
-
-### 3. Indentation and Hierarchy
-
-YAML is extremely sensitive to spaces. In your original file:
-
-* The `retention: 7d` line under Prometheus was indented incorrectly (it had 4 spaces instead of 2 relative to `prometheusSpec`).
-* There were commented-out lines that had "broken" the indentation flow for the blocks below them.
-* **The Fix:** I normalized the indentation so that the Helm chart could correctly map your `values.yaml` to the Kubernetes Custom Resources.
-
-### How the Architecture Works
-
-To understand why these changes "triggered" the appearance of the pod, look at the flow:
-
-1. **Helm** takes your `values.yaml` and creates a Kubernetes object called an **Alertmanager Custom Resource (CR)**.
-2. **The Prometheus Operator** watches for changes to that CR.
-3. **The Validation Step:** The Operator reads your `config` block. If it’s valid (has a receiver, correct syntax), the Operator generates a **Secret** containing the config and then creates a **StatefulSet**.
-4. **The Pod Creation:** The StatefulSet finally creates the **Alertmanager Pod**.
-
-By fixing the config and storage, we allowed the **Operator** to move from Step 2 to Step 3. Previously, it was likely stuck at Step 2, logging an error in the background saying, "I can't create this Alertmanager because the configuration is invalid."
-
-
-
-## What I Learned
-
-[intro] 1 line
-
-[Content] bullet points
-
-## Why This Matters
-
-[intro] 1 line
-
-[Content] bullet points
-
-## What's Next
-
-[intro] 1 line
-
-[Content] bullet points
-
-## Final Thoughts
-
-[Outro] 2 lines
+- Achieved centralized monitoring across multiple Kubernetes environments
+- Implemented cluster-wide centralized logging and log aggregation
+- Enabled environment-aware metrics and log isolation for `dev`, `stage`, and `prod`
+- Reduced deployment instability through dependency-aware synchronization
+- Improved troubleshooting efficiency using unified observability workflows
+- Automated deployment reconciliation through GitOps practices
+- Standardized observability configuration using reusable Helm templates
+- Improved operational visibility into PostgreSQL and Kubernetes workloads
+- Established scalable repository organization through layered architecture
+- Integrated real-time alert delivery through Slack and email pipelines
+
+## ⚔️ Challenges & Solutions
+
+This project involved building and operating a production-style Kubernetes observability platform, requiring deep troubleshooting across networking, GitOps, monitoring, logging, alerting, RBAC, and deployment orchestration layers.
+
+### Summary Only (Read full section - [here](./challenges_&_solutions.md))
+
+| Area | Challenge | Solution |
+|---|---|---|
+| ArgoCD | Layered deployments executed simultaneously | Implemented Lua-based health checks for dependency-aware sync |
+| Postgre Exporter | Confusion with architecture and exporter not working | Removed confusion by creating Architecture diagram, then Implemented it |
+| Prometheus | ServiceMonitors silently ignored | Reordered CRD installation lifecycle |
+| Loki | Promtail crashed with `too many open files` | Tuned Linux inotify kernel limits |
+| Alertmanager | Pods never created | Fixed Operator validation + storage configuration |
+| Multi-env Observability | Logs/metrics mixed across environments | Designed environment-aware labels |
+
+## 🧠 Key Learnings
+
+Building and operating this platform significantly improved my understanding of production-grade Kubernetes observability and GitOps workflows.
+
+- Learned how Prometheus Operator manages monitoring through CRDs and reconciliation loops
+- Improved understanding of Kubernetes DNS, Services, and inter-service communication
+- Gained hands-on experience troubleshooting exporter-based telemetry pipelines
+- Learned how Linux kernel limits impact large-scale log aggregation systems
+- Improved understanding of Kubernetes Operator validation and reconciliation behavior
+- Learned how deployment orchestration depends on accurate health signaling
+- Strengthened GitOps architecture and dependency-management practices
+- Improved troubleshooting methodology by validating runtime behavior over UI assumptions
+- Learned practical RBAC and Principle of Least Privilege implementation strategies
+- Improved observability design through structured labeling and metadata enrichment
+
+## Future Improvements
+
+- This project will now transition into `terraform` for full IaC implementation
