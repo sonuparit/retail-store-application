@@ -1,24 +1,28 @@
 # 🚀 Observability layer Implementation
 
-This project implements a production-style Kubernetes observability and GitOps platform focused on monitoring, centralized logging, alerting, deployment orchestration, and multi-environment management.
+> [!NOTE]
+> Beyond this implementation, the Application layer of the project was deployed on AWS EKS Auto Mode, Terraform-provisioned infrastructure, and full ArgoCD-driven GitOps CI/CD workflows. [(View Implementation)](https://github.com/sonuparit/terraform-gitops-pipeline)
+
+This section of project implements a production-style Kubernetes observability and GitOps platform focused on monitoring, centralized logging, alerting, deployment orchestration, and multi-environment management.
 
 ## 📑 Table of Contents
 
-1. [Overview]()
-2. [Architecture]()
-3. [Repository Structure]()
-4. [Tech Stack]()
-5. [Core Features]()
-6. [Implementation Highlights]()
-7. [Deployment Guide]()
-8. [Architectural Decisions]()
-9. [Operational Outcomes]()
-10. [Challenges & Solutions]()
-    - [Summary Only]()
+1. [Overview](#-overview)
+2. [Architecture](#-architecture)
+3. [Metrics & Observability Flow](#-metrics--observability-flow)
+4. [Repository Structure](#-repository-structure)
+5. [Tech Stack](#️-tech-stack)
+6. [Core Features](#-core-features)
+7. [Implementation Highlights](#️-implementation-highlights)
+8. [Deployment Guide](#-deployment-guide)
+9. [Architectural Decisions](#️-architectural-decisions)
+10. [Operational Outcomes](#-operational-outcomes)
+11. [Challenges & Solutions](#️-challenges--solutions)
+    - Summary Only
     - Read full section [(here)](./challenges_&_solutions.md)
-11. [Key Learnings]()
-12. [Future Improvements]()
-13. [Screenshots]()
+12. [Key Learnings](#-key-learnings)
+13. [Future Improvements](#-future-improvements)
+14. [Screenshots](#-screenshots)
 
 ## 📖 Overview
 
@@ -38,11 +42,39 @@ It was designed to simulate real-world operational workflows including:
 - RBAC-aware GitOps management
 - Kubernetes-native observability practices
 
-## Architecture
+## 🗼 Architecture
 
 ![alt text](screenshots/arch.jpg)
 
-## Repository Structure
+## 📊 Metrics & Observability Flow
+
+### Metrics flow
+
+  ```text
+  Application
+    ↓
+  Service
+    ↓
+  ServiceMonitor
+    ↓
+  Prometheus
+    ↓
+  Grafana / Alertmanager
+  ```
+
+### Logs flow
+
+  ```text
+  Container Logs
+    ↓
+  Promtail
+    ↓
+  Loki
+    ↓
+  Grafana Explore
+  ```
+
+## 📂 Repository Structure
 
 ```txt
 .
@@ -146,7 +178,7 @@ It was designed to simulate real-world operational workflows including:
 - Environment Labeling
 - Runtime Telemetry Collection
 
-## 🚀 Core Features
+## 🎯 Core Features
 
 This platform implements a production-style Kubernetes observability and GitOps workflow focused on scalability, operational visibility, deployment reliability, and multi-environment management.
 
@@ -386,9 +418,12 @@ Successfully verified:
 - application-level telemetry
 - Kubernetes metadata enrichment
 
-## Deployment Guide
+## 📦 Deployment Guide
 
 This section walks through deploying the full multi-environment GitOps setup on a kind Kubernetes cluster running on EC2.
+
+> [!NOTE]
+> Kind was used for cost-efficient local Kubernetes simulation and rapid environment iteration.
 
 ### Prerequisites
 
@@ -655,9 +690,12 @@ Building and operating this platform significantly improved my understanding of 
 - Learned practical RBAC and Principle of Least Privilege implementation strategies
 - Improved observability design through structured labeling and metadata enrichment
 
-## Future Improvements
+## 🤖 Future Improvements
 
-- This project will now transition into `terraform` for full IaC implementation
+- EKS deployment
+- Terraform Provisioning
+- Full CI/CD using GitHub Actions
+- Add automated backup and disaster recovery workflows
 
 ## 📸 Screenshots
 
@@ -692,8 +730,6 @@ ArgoCD Metrics
 ArgoCD Logs
 
 ![alt text](screenshots/ss50.png)
-
-Loki Centralized Logging
 
 Prometheus Alert Simulation
 
