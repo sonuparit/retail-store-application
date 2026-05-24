@@ -1,6 +1,6 @@
 # 🚀 Observability layer Implementation
 
-[intro] 1 line
+This project implements a production-style Kubernetes observability and GitOps platform focused on monitoring, centralized logging, alerting, deployment orchestration, and multi-environment management.
 
 ## 📑 Table of Contents
 
@@ -18,10 +18,9 @@
     - Read full section [(here)](./challenges_&_solutions.md)
 11. [Key Learnings]()
 12. [Future Improvements]()
+13. [Screenshots]()
 
 ## 📖 Overview
-
-This project implements a production-style Kubernetes observability and GitOps platform focused on monitoring, centralized logging, alerting, deployment orchestration, and multi-environment management.
 
 The platform integrates:
 
@@ -41,13 +40,9 @@ It was designed to simulate real-world operational workflows including:
 
 ## Architecture
 
-[intro] 1 line
-
-![alt text](screenshots/ss01.jpg)
+![alt text](screenshots/arch.jpg)
 
 ## Repository Structure
-
-[intro] 1 line
 
 ```txt
 .
@@ -151,12 +146,6 @@ It was designed to simulate real-world operational workflows including:
 - Environment Labeling
 - Runtime Telemetry Collection
 
-[intro] 1 line
-
-[Content] bullet points
-
-## 🚀 Core Features
-
 ## 🚀 Core Features
 
 This platform implements a production-style Kubernetes observability and GitOps workflow focused on scalability, operational visibility, deployment reliability, and multi-environment management.
@@ -209,6 +198,8 @@ Implemented Kubernetes-native monitoring using `ServiceMonitor` resources instea
 
 Created dedicated `ServiceMonitor` manifests for microservices to enable:
 
+![alt text](./screenshots/ss32.png)
+
 - automatic target discovery
 - Prometheus Operator integration
 - environment-aware monitoring
@@ -237,6 +228,8 @@ This reduced debugging complexity and enabled controlled observability rollout.
 
 Converted observability resources into reusable Helm templates to support scalable multi-service and multi-environment deployments.
 
+![alt text](screenshot33-1.png)
+
 Helmified:
 
 - labels
@@ -244,6 +237,8 @@ Helmified:
 - ServiceMonitors
 - environment metadata
 - namespace-aware monitoring
+
+![alt text](./screenshots/ss97.png)
 
 Successfully implemented centralized metrics aggregation for:
 
@@ -258,6 +253,8 @@ across env:
 - dev
 - stage
 - prod
+
+![alt text](./screenshots/ss98.png)
 
 This enabled:
 
@@ -285,7 +282,7 @@ This ensured:
 - centralized log ingestion
 - scalable observability architecture
 
-### 🪵 Centralized Logging via Loki
+### 📝 Centralized Logging via Loki
 
 Implemented centralized Kubernetes logging using:
 
@@ -308,11 +305,15 @@ using LogQL queries such as:
 {app="carts"}
 ```
 
+![alt text](./screenshots/ss106.png)
+
 and:
 
 ```logql
-{env="stage"}
+{namespace="dev"}
 ```
+
+![alt text](./screenshots/ss04.png)
 
 ### 🏷️ Helmified Environment & Application Labeling Strategy
 
@@ -373,6 +374,8 @@ Validated the complete observability pipeline through:
 - Loki Explore
 - LogQL Queries
 - PromQL Queries
+- Custom alerting
+- Email & Slack Notification
 
 Successfully verified:
 
@@ -393,11 +396,7 @@ This section walks through deploying the full multi-environment GitOps setup on 
 
 1. ***`EC2 instance`** (recommended flex.large for multi env)*
 
-    ![alt text](screenshots/screenshot50.png)
-
-2. ***`EBS volume`** attached to EC2 and mounted for orders service*
-
-    ![alt text](screenshots/screenshot17.png)
+2. ***`EBS volume`** attached to EC2 and mounted for persistence services*
 
 3. ***`Dynamodb`** for carts service with:*
 
@@ -410,18 +409,12 @@ This section walks through deploying the full multi-environment GitOps setup on 
 
 4. ***`AWS Sercrets Manager`** with secrets configured:*
 
-    ![alt text](screenshots/screenshot04.png)
-
 5. ***`IAM role for EC2`** with permissions:*
-
-    ![alt text](screenshots/screenshot30.png)
 
     - dynamodb read and write access
     - secrets manager read access
 
 6. ***`Metadata response hop limit`** for EC2 set to: `5`*
-
-    ![alt text](screenshots/screenshot32.png)
 
 **Tools:**
 
@@ -440,8 +433,6 @@ This section walks through deploying the full multi-environment GitOps setup on 
     cd /retail-store-reverse-engineered/my-work/bootstrap/
     ```
 
-    ![alt text](screenshots/screenshot52.png)
-
 2. Run the script:
 
     ```bash
@@ -455,6 +446,8 @@ This section walks through deploying the full multi-environment GitOps setup on 
     chmod 700 port-forward.sh
     bash port-forward.sh
     ```
+
+4. Follow the instructions:
 
 ## 🏗️ Architectural Decisions
 
@@ -515,7 +508,6 @@ The platform was designed around GitOps, layered infrastructure separation, and 
   Used `kube-prometheus-stack` with:
 
   - `ServiceMonitor`
-  - `PodMonitor`
 
   instead of annotation-only scraping.
 
@@ -534,7 +526,6 @@ The platform was designed around GitOps, layered infrastructure separation, and 
 
   - Metrics
   - Logs
-  - Dashboards
   - Queries
 
 - **Why:**
@@ -570,8 +561,6 @@ The platform was designed around GitOps, layered infrastructure separation, and 
   Used dedicated exporters such as:
 
   - `postgres-exporter`
-
-  instead of embedding monitoring logic directly into applications.
 
 - **Why:**
 
@@ -669,3 +658,83 @@ Building and operating this platform significantly improved my understanding of 
 ## Future Improvements
 
 - This project will now transition into `terraform` for full IaC implementation
+
+## 📸 Screenshots
+
+ArgoCD ServiceMonitors
+
+![alt text](screenshots/ss17.png)
+
+Postgre exporter
+
+![alt text](screenshots/ss07.png)
+
+Custom Prometheus alerts
+
+![alt text](screenshots/ss03.png)
+
+Prometheus and ArgoCD
+
+![alt text](screenshots/ss16.png)
+
+Apps Metrics
+
+![alt text](screenshots/ss91.png)
+
+Apps Logs
+
+![alt text](screenshots/ss105.png)
+
+ArgoCD Metrics
+
+![alt text](screenshots/ss74.png)
+
+ArgoCD Logs
+
+![alt text](screenshots/ss50.png)
+
+Loki Centralized Logging
+
+Prometheus Alert Simulation
+
+![alt text](screenshots/ss34.png)
+
+Alert Manager
+
+![alt text](screenshots/ss40.png)
+
+Slack Notification
+
+![alt text](screenshots/ss36.png)
+
+Email Notification
+
+![alt text](screenshots/ss37.png)
+
+Kubernetes Dashboard
+
+![alt text](screenshots/ss05.png)
+
+PostgreSQL
+
+![alt text](screenshots/ss46.png)
+
+3 env deployment
+
+![alt text](screenshots/ss19.png)
+
+Deployment verification
+
+![alt text](screenshots/ss48.png)
+
+Node Exporter
+
+![alt text](screenshots/ss64.png)
+
+API Server
+
+![alt text](screenshots/ss66.png)
+
+Kube-state-matrics
+
+![alt text](screenshots/ss70.png)
