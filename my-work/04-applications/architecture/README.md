@@ -1,41 +1,27 @@
-# 🏗️ Architectural Understanding
+# 🏗️ Reverse Engineered to gain Architectural Understanding
 
 This project is a retail store application built using a microservices architecture (5 services). I reverse-engineered the system to gain a deep understanding of service communication, dependencies, and Kubernetes-oriented design patterns.
 
 ## 📑 Table of contents
 
 1. **[Overview](#-overview)**
-2. **[What I Discovered](#-what-i-discovered)**
-3. **[App Architecture](#️-app-architecture-original)**
+2. **[App Architecture](#️-app-architecture-original)**
+3. **[What I Discovered](#-what-i-discovered)**
 4. **[Why this design?](#-why-this-design)**
 5. **[Why This Project Matters](#-why-this-project-matters)**
 6. **[Next Steps](#-next-steps)**
 
 ## 📌 Overview
 
-This app is not my work - I'm just reverse engineering it to better understand microservices, kubernetes and cloud
-**Developed a deep understanding of the system by analyzing:**
+**Performed architectural analysis of the application by studying:**
 
-- *Application source code*
-- *Environment variables and configurations*
-- *Service dependencies*
-- *API communication patterns*
+* *Application source code*
+* *Service dependencies*
+* *Environment variables and runtime configurations*
+* *API communication patterns*
+* *Containerization requirements*
 
-**This helped me map the end-to-end flow of the application and understand how microservices interact within a Kubernetes-style environment.**
-
-## 🧠 What I Discovered
-
-**Architecture Insights:**
-
-- *This application is a microservices-based demo system designed to replicate real-world Kubernetes behavior.*
-
-**Key observations:**
-
-- *Simulates database interactions without relying on persistent storage*
-- *Uses in-memory storage (tmpfs), making services effectively stateless*
-- *No Persistent Volumes (PV) or Persistent Volume Claims (PVC) are used*
-- *Service communication is handled via structured API calls and headers*
-- *Supports optional integration with external databases if needed*
+**This process helped map the end-to-end service flow and identify how microservices interact within a Kubernetes-oriented environment.**
 
 ## 🏗️ App Architecture (Original)
 
@@ -49,33 +35,47 @@ This app is not my work - I'm just reverse engineering it to better understand m
 | Orders               | Java     | User orders API                         |
 | Checkout             | Node     | API to orchestrate the checkout process |
 
+### 🧠 What I Discovered
+
+**Architecture Insights:**
+
+* *Stateless microservices architecture*
+* *Cloud-native service design patterns*
+* *Container-oriented application structure*
+* *Internal API-based service communication*
+* *Kubernetes-friendly workload separation*
+* *Ephemeral workload design*
+* *Supports optional integration with external databases if needed*
+
 ### 💡 Why this design?
 
-**This architecture is intentionally designed to:**
+**This architecture appears intentionally optimized for:**
 
-- *Simplify deployment and setup*
-- *Eliminate state management complexity*
-- *Focus on service interaction and orchestration*
-- *Enable easy experimentation in Kubernetes environments*
+* *State/Stateless workload orchestration*
+* *Production oriented workflows*
+* *Reduced infrastructure dependency management*
+* *Cloud-native deployment environments*
+* *Rapid experimentation in Kubernetes ecosystems*
+* *Service-level isolation and modularity*
 
 ### 💡 Why This Project Matters
 
-**This project demonstrates my ability to:**
+**This reverse-engineering process strengthened my understanding of:**
 
-- *Analyze and understand complex distributed systems*
-- *Reverse-engineer real-world architectures*
-- *Identify design trade-offs (stateless vs persistent systems)*
-- *Work with microservices in a Kubernetes-oriented setup*
+* *Distributed system architecture*
+* *Microservices communication patterns*
+* *Container-first application design*
+* *Kubernetes-oriented deployment models*
+* *Service dependency mapping*
+* *Operational considerations in cloud-native environments*
+
+**It also established the architectural foundation required for later implementation phases involving containerization, orchestration, GitOps workflows, observability, and infrastructure automation.**
 
 ### 📌 Conclusion
 
-**The application is intentionally designed to be stateless, prioritizing:**
+This architectural analysis phase provided a strong foundation for understanding how modern cloud-native microservices are structured, deployed, and orchestrated within Kubernetes-oriented environments.
 
-- *Portability*
-- *Simplicity*
-- *Kubernetes behavior simulation*
-
-**over long-term data persistence.**
+The project served as a practical entry point into distributed systems design, containerized workloads, service communication patterns, and production-style application architecture.
 
 ---
 
@@ -84,8 +84,7 @@ This app is not my work - I'm just reverse engineering it to better understand m
 1. *Deep dive into **`Dockerfile optimization`** [(read here)](../docker/)*
 2. *Refactor setup for production-ready Docker Compose*
 3. *Implement Kubernetes deployments*
-4. *Provision infrastructure using Terraform (IaC)*
+4. *Add email notification system*
 5. *Build a CI/CD pipeline*
-6. *Add email notification system*
-7. *Integrate monitoring (Prometheus + Grafana)*
-8. *Full Automation via one command **`terraform apply`***
+6. *Integrate monitoring (Prometheus + Grafana)*
+7. *Full Automation via terrafom and GitOps workflows***

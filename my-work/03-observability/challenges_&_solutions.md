@@ -2,7 +2,7 @@
 
 Challenges and Solutions section only
 
-## 📑 Table of Contents [(Read full contect here)](./README.md)
+## 📑 Table of Contents [(Read full contect here)](./)
 
 - [Challenges & Solutions](#️-challenges--solutions)
   - [PostgreSQL Exporter](#1-postgresql-exporter)
