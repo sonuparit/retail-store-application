@@ -4,16 +4,21 @@ A production-oriented Docker Compose orchestration setup focused on reverse engi
 
 ## 📑 Table of Contents
 
+**🧭 Navigation:**
+
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
+
+**📘 Project Documentation:**
+
 - [Overview](#-overview)
-- [What this Project Demonstrates](#-what-this-project-demonstrates)
-- [Key Contribution](#-key-contributions)
-- [How to Run](#️-how-to-run)
 - [Tech Stack](#️-tech-stack)
-- [Key Technical Learnings](#-key-technical-learnings)
+- [Deployment Guide](#-deployment-guide)
+- [What This Project Demonstrates](#-what-this-project-demonstrates)
+- [Core Implementation](#️-core-implementation)
+- [Key Learnings](#-key-learnings)
+- [Conclusion](#-conclusion)
 - [Next Phase](#-next-phase)
-- [Final thoughts](#-final-thoughts)
 
 ## 🗺️ Implementation Roadmap
 
@@ -60,55 +65,13 @@ A production-oriented Docker Compose orchestration setup focused on reverse engi
 
 *The objective was not only to run containers, but to understand how independently deployed microservices communicate, share configuration, manage dependencies, and operate within a unified runtime environment.*
 
-## 🧠 What This Project Demonstrates
+## 🛠️ Tech Stack
 
-**This implementation demonstrates practical understanding of:**
+- **Docker**
+- **Docker Compose**
+- **Microservices Architecture**
 
-- *Multi-service orchestration using Docker Compose*
-- *Container networking and service discovery*
-- *Configuration-driven application architecture*
-- *Environment variable management*
-- *Service dependency coordination*
-- *Runtime validation and debugging workflows*
-- *Production-oriented microservices operation*
-
-## 🔍 Key Contributions
-
-### 1. Compose Configuration Analysis
-
-**Analyzed service orchestration patterns across all Docker Compose configurations, including:**
-
-- *Service definitions*
-- *Environment mappings*
-- *Dependency chains*
-- *Database connectivity*
-- *Security-related configurations*
-- *Container startup coordination*
-
-### 2. Configuration Behavior Analysis
-
-**Validated the operational purpose behind key orchestration directives, including:**
-
-- *Port exposure strategy*
-- *Internal service communication*
-- *Restart policy behavior*
-- *Build context separation*
-- *Health check implementation*
-- *Runtime environment isolation*
-
-### 3. Environment Variable Discovery  
-
-*Identified required environment variables by:*
-
-- *Tracing source code*  
-- *Mapping configuration usage across services*  
-- *Ensuring correct runtime injection*  
-
-### 4. Unified Multi-Service Orchestration
-
-*Designed a modular Compose-based orchestration workflow using shared configuration and a centralized bridge network (**`main-app-net`**) to enable seamless communication across independently managed services.*
-
-## ▶️ How to Run
+## 📦 Deployment Guide
 
 - Clone the repo:
 
@@ -164,15 +127,55 @@ docker ps
 
     ![alt text](screenshots/performance.gif)
 
----
+## 🧠 What This Project Demonstrates
 
-## ⚙️ Tech Stack
+**This implementation demonstrates practical understanding of:**
 
-- **Docker**
-- **Docker Compose**
-- **Microservices Architecture**
+- *Multi-service orchestration using Docker Compose*
+- *Container networking and service discovery*
+- *Configuration-driven application architecture*
+- *Environment variable management*
+- *Service dependency coordination*
+- *Runtime validation and debugging workflows*
+- *Production-oriented microservices operation*
 
-## 🚀 Key Technical Learnings
+## ⚙️ Core Implementation
+
+### 1. Compose Configuration Analysis
+
+**Analyzed service orchestration patterns across all Docker Compose configurations, including:**
+
+- *Service definitions*
+- *Environment mappings*
+- *Dependency chains*
+- *Database connectivity*
+- *Security-related configurations*
+- *Container startup coordination*
+
+### 2. Configuration Behavior Analysis
+
+**Validated the operational purpose behind key orchestration directives, including:**
+
+- *Port exposure strategy*
+- *Internal service communication*
+- *Restart policy behavior*
+- *Build context separation*
+- *Health check implementation*
+- *Runtime environment isolation*
+
+### 3. Environment Variable Discovery  
+
+*Identified required environment variables by:*
+
+- *Tracing source code*  
+- *Mapping configuration usage across services*  
+- *Ensuring correct runtime injection*  
+
+### 4. Unified Multi-Service Orchestration
+
+*Designed a modular Compose-based orchestration workflow using shared configuration and a centralized bridge network (**`main-app-net`**) to enable seamless communication across independently managed services.*
+
+## 🎓 Key Learnings
 
 - *How independently deployed microservices communicate within shared container networks*
 - *Practical orchestration patterns using Docker Compose*
@@ -181,14 +184,14 @@ docker ps
 - *Container health validation and operational debugging*
 - *Reverse engineering and understanding production-style application setups*
 
+## 📌 Conclusion
+
+This phase was not only about orchestrating containers, but about understanding the operational behavior of distributed services within a shared runtime environment.
+
+The reverse-engineering process strengthened my ability to analyze existing systems, validate runtime behavior, and reason about production-oriented orchestration workflows.
+
 ## 🔭 Next Phase
 
 The next implementation phase transitions this Compose-based orchestration workflow into Kubernetes-native deployments, including:
 
 *Individual service testing for Kubernetes deployment [(read here)](../kubernetes/)*
-
-## 📌 Final Thoughts
-
-This phase was not only about orchestrating containers, but about understanding the operational behavior of distributed services within a shared runtime environment.
-
-The reverse-engineering process strengthened my ability to analyze existing systems, validate runtime behavior, and reason about production-oriented orchestration workflows.

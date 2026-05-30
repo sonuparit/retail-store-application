@@ -4,15 +4,20 @@ A hands-on reverse-engineered microservices project focused on understanding pro
 
 ## 📑 Table of Contents
 
+**🧭 Navigation:**
+
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
+
+**📘 Project:**
+
 - [Overview](#-overview)
 - [Architecture](#️-architecture-original)
 - [Dockerfile Breakdown](#-dockerfile-breakdown-key-insights)
-- [What I choose](#-what-i-chose-for-my-project)
-- [My Contribution](#-my-contribution)
-- [Key Technical Learnings](#-key-technical-learnings)
-- [Why This Project Matters](#-why-this-project-matters)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#-architectural-decisions)
+- [Key Learnings](#-key-learnings)
+- [Conclusion](#-conclusion)
 - [Next Phase](#-next-phase)
 - [Screenshots](#-screenshots)
 
@@ -141,7 +146,17 @@ While analyzing the container build strategy, I explored whether the existing ba
 This Dockerfile reflects practical, production-oriented decisions where compatibility, stability, and security are prioritized over aggressive size optimization. While lightweight alternatives were explored, system-level constraints (package manager behavior and libc differences) justify the current approach, demonstrating the importance of balancing optimization with real-world reliability.
 ```
 
-## 🧪 What I Chose for My Project
+## ⚙️ Core Implementation
+
+- *Reverse engineered existing Docker build workflows*
+- *Analyzed production-oriented Dockerfile design decisions*
+- *Experimented with alternative base image strategies*
+- *Validated compatibility constraints between libc ecosystems*
+- *Reduced container image size by approximately **190MB***
+- *Documented architectural trade-offs between optimization and stability*
+- *Improved understanding of production-grade container engineering*
+
+## 🧠 Architectural Decisions
 
 **Experimental Optimization:**\
 To better understand container optimization trade-offs, I implemented and tested a lightweight container strategy using **`AL2023-minimal`**.
@@ -156,17 +171,7 @@ This helped evaluate:
 
 *I chose a **`minimal base image`** to intentionally explore its limitations and identify potential compatibility issues, even though the original image works reliably.*
 
-## 🔍 My Contribution
-
-- *Reverse engineered existing Docker build workflows*
-- *Analyzed production-oriented Dockerfile design decisions*
-- *Experimented with alternative base image strategies*
-- *Validated compatibility constraints between libc ecosystems*
-- *Reduced container image size by approximately **190MB***
-- *Documented architectural trade-offs between optimization and stability*
-- *Improved understanding of production-grade container engineering*
-
-## 🧠 Key Technical Learnings
+## 🎓 Key Learnings
 
 - *How microservices are isolated and packaged into independent containers*
 - *Production-oriented Dockerfile design patterns*
@@ -176,7 +181,7 @@ This helped evaluate:
 - *Debugging and validating container runtime issues*
 - *Balancing optimization with operational reliability*
 
-## 💡 Why This Project Matters
+## 📌 Conclusion
 
 **This project strengthened my understanding of:**
 
@@ -192,8 +197,6 @@ This helped evaluate:
 ## 🔭 Next Phase
 
 *Docker Compose Orchestration [(read here)](../docker-compose/)*
-
-------------------------------------------------------------------------
 
 ## 📸 Screenshots
 

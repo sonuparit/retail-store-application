@@ -7,13 +7,13 @@
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
 - [Overview](#-overview)
-- [Architectural Decision](#️-architectural-decision)
-- [Key Implementations](#-key-implementations)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#️-architectural-decisions)
 - [Challenges & Solutions](#️-challenges--solutions)
-- [Outcome](#-outcome)
+- [Operational Outcomes](#-operational-outcomes)
 - [Key Learnings](#-key-learnings)
 - [Next Phase](#-next-phase)
-- [Extra Screenshots](#-extra-screenshots)
+- [Screenshots](#-screenshots)
 
 ## 🗺️ Implementation Roadmap
 
@@ -55,7 +55,19 @@
 
 *The primary objective was to understand how stateless service workflows behave under container orchestration without introducing infrastructure components that provided limited architectural or operational value.*
 
-## 🏛️ Architectural Decision
+## ⚙️ Core Implementation
+
+*Analyzed runtime configuration and service dependencies to safely remove unnecessary Redis-related integration requirements.*
+
+- *Created and validated all required Kubernetes deployment resources*
+
+    ![alt text](screenshots/screenshot05.png)
+
+- *Simplified runtime configuration by removing persistence-related environment variables not required for stateless execution*
+
+    ![alt text](screenshots/screenshot06.png)
+
+## 🏛️ Architectural Decisions
 
 ***Context:***
 
@@ -73,19 +85,7 @@
 
 *Redis integration was intentionally excluded to preserve a stateless workflow model and reduce unnecessary infrastructure overhead during Kubernetes service validation.*
 
-## 🔧 Key Implementations
-
-*Analyzed runtime configuration and service dependencies to safely remove unnecessary Redis-related integration requirements.*
-
-- *Created and validated all required Kubernetes deployment resources*
-
-    ![alt text](screenshots/screenshot05.png)
-
-- *Simplified runtime configuration by removing persistence-related environment variables not required for stateless execution*
-
-    ![alt text](screenshots/screenshot06.png)
-
-## ⚠️ Challenges & Solutions
+## ⚔️ Challenges & Solutions
 
 The service initially contained persistence-oriented configuration assumptions that required careful validation to determine whether Redis integration was operationally necessary.
 
@@ -105,7 +105,7 @@ The service initially contained persistence-oriented configuration assumptions t
 
     ![alt text](screenshots/screenshot06.png)
 
-## ✅ Outcome
+## 📈 Operational Outcomes
 
 *The Checkout service was successfully validated in Kubernetes using a simplified stateless architecture model.*
 
@@ -113,7 +113,7 @@ The service initially contained persistence-oriented configuration assumptions t
 
 *This approach reduced operational complexity while preserving focus on orchestration behavior, service interaction patterns, and infrastructure-level learning objectives.*
 
-## 💡 Key Learnings
+## 🎓 Key Learnings
 
 - *Learned to **`validate systems incrementally`** — testing services in isolation before full orchestration improved reliability and debugging clarity.*
 
@@ -125,13 +125,11 @@ The service initially contained persistence-oriented configuration assumptions t
 
 - *Strengthened my ability to **`think in terms of system design trade-offs`**, not just implementation*
 
-------------------------------------------------------------------------
-
 ## 🔭 Next Phase
 
 *Orders Service testing and deployment [(read here)](../orders-postgreSQL-test/)*
 
-## 📸 Extra Screenshots
+## 📸 Screenshots
 
 - *Creation of KinD Cluster for local development*
 

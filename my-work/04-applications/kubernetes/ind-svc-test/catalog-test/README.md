@@ -7,13 +7,13 @@
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
 - [Overview](#-overview)
-- [Architectural Decision Record (ADR)](#️-architectural-decision-record--adr)
-- [Key Implementations](#-key-implementations)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#️-architectural-decisions)
 - [Challenges & Solutions](#️-challenges--solutions)
-- [Outcome](#-outcome)
+- [Operational Outcomes](#-operational-outcomes)
 - [Key Learnings](#-key-learnings)
 - [Next Phase](#-next-phase)
-- [Extra Screenshots](#-extra-screenshots)
+- [Screenshots](#-screenshots)
 
 ## 🗺️ Implementation Roadmap
 
@@ -57,7 +57,19 @@
 
 *This approach helped me stay focused on orchestration, system behavior, and production-relevant trade-offs rather than repeating similar integrations.*
 
-## 🏛️ Architectural Decision Record 📝 (ADR)
+## ⚙️ Core Implementation
+
+*Analyzed application configuration and environment dependencies to fully decouple persistence requirements from service runtime behavior.*
+
+- *Created and validated all required Kubernetes deployment resources*
+
+    ![alt text](screenshots/screenshot05.png)
+
+- *Implemented only the minimum runtime configuration required for stable in-memory execution*
+
+    ![alt text](screenshots/screenshot10.png)
+
+## 🏛️ Architectural Decisions
 
 ***Context:***
 
@@ -75,19 +87,7 @@
 
 *MariaDB integration was intentionally excluded from this service implementation to reduce unnecessary operational complexity and maintain focus on orchestration, infrastructure behavior, and Kubernetes validation workflows.*
 
-## 🔧 Key Implementations
-
-*Analyzed application configuration and environment dependencies to fully decouple persistence requirements from service runtime behavior.*
-
-- *Created and validated all required Kubernetes deployment resources*
-
-    ![alt text](screenshots/screenshot05.png)
-
-- *Implemented only the minimum runtime configuration required for stable in-memory execution*
-
-    ![alt text](screenshots/screenshot10.png)
-
-## ⚠️ Challenges & Solutions
+## ⚔️ Challenges & Solutions
 
 *The service initially contained tightly coupled persistence assumptions, requiring careful validation of runtime behavior to isolate and safely remove unnecessary database dependencies.*
 
@@ -119,7 +119,7 @@
 
 ------------------------------------------------------------------------
 
-## ✅ Outcome
+## 📈 Operational Outcomes
 
 ***`Simplified the architecture while preserving learning depth where it mattered`**. This allowed faster iteration and better focus on system design, service interaction, and deployment strategies.*
 
@@ -127,7 +127,7 @@
 
 ![alt text](screenshots/screenshot06.png)
 
-## 💡 Key Learnings
+## 🎓 Key Learnings
 
 - *Learned to **`validate systems incrementally`** — testing services in isolation before full orchestration improved reliability and debugging clarity*
 
@@ -143,7 +143,7 @@
 
 *Checkout Service testing and deployment [(read here)](../checkout-test/)*
 
-## 📸 Extra Screenshots
+## 📸 Screenshots
 
 - *Creation of KinD Cluster for local development*
 

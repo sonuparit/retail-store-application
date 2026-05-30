@@ -7,15 +7,15 @@ A production-oriented Kubernetes implementation focused on validating real cloud
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
 - [Overview](#-overview)
-- [Source Code Analysis](#️️-source-code-analysis)
-- [Architectural Decision](#️-architectural-decision)
-- [Key Implementations](#-key-implementations)
-- [Challenges & Solutions](#️-challenges--solutions)
-- [Outcome](#-outcome)
-- [Key Learnings](#-key-learnings)
 - [Tech Stack](#-tech-stack)
+- [Source Code Analysis](#️️-source-code-analysis)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#️-architectural-decisions)
+- [Challenges & Solutions](#️-challenges--solutions)
+- [Operational Outcomes](#-operational-outcomes)
+- [Key Learnings](#-key-learnings)
 - [Next Phase](#-next-phase)
-- [Extra Screenshots](#-extra-screenshots)
+- [Screenshots](#-screenshots)
 
 ## 🗺️ Implementation Roadmap
 
@@ -57,6 +57,13 @@ A production-oriented Kubernetes implementation focused on validating real cloud
 
 *The objective was not only functional integration, but also understanding the architectural implications of persistence management, infrastructure ownership, distributed runtime behavior, and production-safe cloud integration patterns.*
 
+## 🛠 Tech Stack
+
+- **AWS DynamoDB**
+- **IAM (Access Management)**
+- **Microservices Architecture**
+- **Docker / Containerized Services**
+
 ## 🕵️‍♂️ Source Code Analysis
 
 **The problem:**
@@ -80,7 +87,23 @@ Direct integration with managed AWS DynamoDB required additional architectural a
   - *If value is set to **`false`:***\
     **The application expects the table with right indexing value already exist.**
 
-## 🏛️ Architectural Decision
+## ⚙️ Core Implementation
+
+- *Analyzed service dependencies and database requirements (**`application.yml`**)*
+
+    ![alt text](screenshots/screenshot08.png)
+
+- *Replaced in-memory storage with **`AWS DynamoDB`***
+
+    ![alt text](screenshots/screenshot05.png)
+
+- *Configured **`IAM user`** with appropriate DynamoDB permissions (**`temporary full access for tests`**)*
+
+    ![alt text](screenshots/screenshot04.png)
+
+- *Implemented secure access using **`AWS Access Keys`** (lab setup using **`K8s secret`**)*
+
+## 🏛️ Architectural Decisions
 
 ### If `CREATE_TABLE` == `true`
 
@@ -119,23 +142,7 @@ Direct integration with managed AWS DynamoDB required additional architectural a
 
 *I intentionally kept `CREATE_TABLE=false` to align the system with production-oriented infrastructure practices, where infrastructure provisioning is separated from application runtime responsibilities.*
 
-## 🔧 Key Implementations
-
-- *Analyzed service dependencies and database requirements (**`application.yml`**)*
-
-    ![alt text](screenshots/screenshot08.png)
-
-- *Replaced in-memory storage with **`AWS DynamoDB`***
-
-    ![alt text](screenshots/screenshot05.png)
-
-- *Configured **`IAM user`** with appropriate DynamoDB permissions (**`temporary full access for tests`**)*
-
-    ![alt text](screenshots/screenshot04.png)
-
-- *Implemented secure access using **`AWS Access Keys`** (lab setup using **`K8s secret`**)*
-
-## ⚠️ Challenges & Solutions
+## ⚔️ Challenges & Solutions
 
 **Issue:**
 
@@ -162,7 +169,7 @@ Direct integration with managed AWS DynamoDB required additional architectural a
 
     ![alt text](screenshots/screenshot07.png)
 
-## ✅ Outcome
+## 📈 Operational Outcomes
 
 - *Successfully integrated AWS DynamoDB with the cart microservice*
 
@@ -173,7 +180,7 @@ Direct integration with managed AWS DynamoDB required additional architectural a
 - *Improved architectural realism and operational reliability*
 - *Established a stronger foundation for GitOps and infrastructure-as-code workflows*
 
-## 💡 Key Learnings
+## 🎓 Key Learnings
 
 This implementation reinforced several core DevOps principles:
 
@@ -201,18 +208,11 @@ This implementation reinforced several core DevOps principles:
 
 - *Choosing pre-provisioned infrastructure over auto-creation ensured **`stability, persistence, and reliability.`***
 
-## 🛠 Tech Stack
-
-- **AWS DynamoDB**
-- **IAM (Access Management)**
-- **Microservices Architecture**
-- **Docker / Containerized Services**
-
 ## 🔭 Next Phase
 
 *Catalog Service testing and deployment [(read here)](../catalog-test/)*
 
-## 📸 Extra Screenshots
+## 📸 Screenshots
 
 - *Creation of KinD Cluster for local development*
 

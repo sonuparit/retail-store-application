@@ -7,13 +7,13 @@ A production-oriented Kubernetes implementation focused on persistent PostgreSQL
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
 - [Overview](#-overview)
-- [Architectural Decision](#️-architectural-decision)
-- [Key Implementations](#-key-implementations)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#️-architectural-decisions)
 - [Challenges & Solutions](#️-challenges--solutions)
-- [Outcome](#-outcome)
+- [Operational Outcomes](#-operational-outcomes)
 - [Key Learnings](#-key-learnings)
 - [Next Phase](#-next-phase)
-- [Extra Screenshots](#-extra-screenshots)
+- [Screenshots](#-screenshots)
 
 ## 🗺️ Implementation Roadmap
 
@@ -49,13 +49,37 @@ A production-oriented Kubernetes implementation focused on persistent PostgreSQL
 - [Monitoring & Observability](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/03-observability)
 - [Production-Grade GitOps Workflow](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work)
 
-## 📌 Overview
+## 📖 Overview
 
 *This implementation focused on transitioning the Orders service from ephemeral mock storage to a production-oriented PostgreSQL persistence architecture within Kubernetes.*
 
 *The primary objective was to validate durable storage behavior, StatefulSet orchestration patterns, and cloud-backed persistence using AWS EBS-integrated Persistent Volumes and Persistent Volume Claims.*
 
-## 🏛️ Architectural Decision
+## ⚙️ Core Implementation
+
+- *Created all resources for **`Orders`** service*
+
+    ![alt text](screenshots/screenshot20.png)
+
+- *Replaced in-memory / local postgreSQL image storage with **`persistent PostgreSQL database storage`***
+
+    ![alt text](screenshots/screenshot15.png)
+
+- *Attached EBS volume to **`persist the data after cluster dispose`** using **`PV and PVC`***
+
+    ![alt text](screenshots/screenshot02.png)
+
+    ![alt text](screenshots/screenshot13.png)
+
+    ![alt text](screenshots/screenshot14.png)
+
+- Implemented Pod-level `fsGroup` security context configuration to ensure PostgreSQL containers received correct read/write permissions on attached EBS-backed storage volumes
+
+    ![alt text](screenshots/screenshot19.png)
+
+- *Implemented **`PGDATA`** env variable variable to mitigate **`drive not empty`**) error*
+
+## 🏛️ Architectural Decisions
 
 ### RabbitMQ
 
@@ -81,33 +105,7 @@ Order-related data required durable persistence beyond pod or cluster lifecycle 
 
 - *Adopted **`persistent PostgreSQL`** storage for the orders service.*
 
-## 🔧 Key Implementations
-
-- *Created all resources for **`Orders`** service*
-
-    ![alt text](screenshots/screenshot20.png)
-
-- *Replaced in-memory / local postgreSQL image storage with **`persistent PostgreSQL database storage`***
-
-    ![alt text](screenshots/screenshot15.png)
-
-- *Attached EBS volume to **`persist the data after cluster dispose`** using **`PV and PVC`***
-
-    ![alt text](screenshots/screenshot02.png)
-
-    ![alt text](screenshots/screenshot13.png)
-
-    ![alt text](screenshots/screenshot14.png)
-
-- Implemented Pod-level `fsGroup` security context configuration to ensure PostgreSQL containers received correct read/write permissions on attached EBS-backed storage volumes
-
-    ![alt text](screenshots/screenshot19.png)
-
-- *Implemented **`PGDATA`** env variable variable to mitigate **`drive not empty`**) error*
-
-------------------------------------------------------------------------
-
-## ⚠️ Challenges & Solutions
+## ⚔️ Challenges & Solutions
 
 ### Problem
 
@@ -160,7 +158,7 @@ initdb: error: directory "/var/lib/postgresql/data" exists but is not empty (los
 
 ------------------------------------------------------------------------
 
-## ✅ Outcome
+## 📈 Operational Outcomes
 
 **Zero-Touch Persistence:**\
 *Successfully integrated AWS EBS with a StatefulSet, ensuring database records survive Pod restarts or node failures without manual data recovery.*
@@ -176,7 +174,7 @@ initdb: error: directory "/var/lib/postgresql/data" exists but is not empty (los
 
 ![alt text](screenshots/screenshot25.png)
 
-## 💡 Key Learnings
+## 🎓 Key Learnings
 
 *Moving from a stateless mock environment to a persistent production-grade architecture taught me that the `devil is in the details` of the infrastructure handshake. Here are my core takeaways:*
 
@@ -206,7 +204,7 @@ initdb: error: directory "/var/lib/postgresql/data" exists but is not empty (los
 
 *UI Service testing and deployment [(read here)](../ui-test/)*
 
-## 📸 Extra Screenshots
+## 📸 Screenshots
 
 - *Setting up the EBS File system*
 

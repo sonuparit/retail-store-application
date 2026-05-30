@@ -7,10 +7,11 @@ This project is a retail store application built using a microservices architect
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
 - [Overview](#-overview)
-- [App Architecture](#️-app-architecture-original)
+- [Architecture](#️-architecture-original)
 - [What I Discovered](#-what-i-discovered)
 - [Why this design?](#-why-this-design)
-- [Why This Project Matters](#-why-this-project-matters)
+- [Key Learnings](#-key-learnings)
+- [Conclusion](#-conclusion)
 - [Next Phase](#-next-phase)
 
 ## 🗺️ Implementation Roadmap
@@ -59,7 +60,7 @@ This project is a retail store application built using a microservices architect
 
 **This process helped map the end-to-end service flow and identify how microservices interact within a Kubernetes-oriented environment.**
 
-## 🏗️ App Architecture (Original)
+## 🏗️ Architecture (Original)
 
 ![alt text](screenshots/architecture.png)
 
@@ -71,7 +72,7 @@ This project is a retail store application built using a microservices architect
 | Orders               | Java     | User orders API                         |
 | Checkout             | Node     | API to orchestrate the checkout process |
 
-### 🧠 What I Discovered
+## 🧠 What I Discovered
 
 **Architecture Insights:**
 
@@ -83,7 +84,7 @@ This project is a retail store application built using a microservices architect
 - *Ephemeral workload design*
 - *Supports optional integration with external databases if needed*
 
-### 💡 Why this design?
+## 🧬 Why this design?
 
 **This architecture appears intentionally optimized for:**
 
@@ -94,7 +95,7 @@ This project is a retail store application built using a microservices architect
 - *Rapid experimentation in Kubernetes ecosystems*
 - *Service-level isolation and modularity*
 
-### 💡 Why This Project Matters
+## 🎓 Key Learnings
 
 **This reverse-engineering process strengthened my understanding of:**
 
@@ -107,13 +108,11 @@ This project is a retail store application built using a microservices architect
 
 **It also established the architectural foundation required for later implementation phases involving containerization, orchestration, GitOps workflows, observability, and infrastructure automation.**
 
-### 📌 Conclusion
+## 📌 Conclusion
 
 This architectural analysis phase provided a strong foundation for understanding how modern cloud-native microservices are structured, deployed, and orchestrated within Kubernetes-oriented environments.
 
 The project served as a practical entry point into distributed systems design, containerized workloads, service communication patterns, and production-style application architecture.
-
----
 
 ## 🔭 Next Phase
 

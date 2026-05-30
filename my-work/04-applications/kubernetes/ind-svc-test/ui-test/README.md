@@ -7,13 +7,13 @@ A production-oriented Kubernetes implementation focused on validating environmen
 - [Implementation Roadmap](#️-implementation-roadmap)
 - [Project Navigation](#-project-navigation)
 - [Overview](#-overview)
-- [Architectural Decision](#️-architectural-decision)
-- [Key Implementations](#-key-implementations)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#️-architectural-decisions)
 - [Challenges & Solutions](#️-challenges--solutions)
-- [Outcome](#-outcome)
+- [Operational Outcomes](#-operational-outcomes)
 - [Key Learnings](#-key-learnings)
 - [Next Phase](#-next-phase)
-- [Extra Screenshots](#-extra-screenshots)
+- [Screenshots](#-screenshots)
 
 ## 🗺️ Implementation Roadmap
 
@@ -49,13 +49,25 @@ A production-oriented Kubernetes implementation focused on validating environmen
 - [Monitoring & Observability](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/03-observability)
 - [Production-Grade GitOps Workflow](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work)
 
-## 📌 Overview
+## 📖 Overview
 
 *This implementation focused on validating the UI service within Kubernetes while intentionally separating runtime observability concerns from application-layer logic.*
 
 *The primary objective was to maintain an environment-agnostic application design and shift infrastructure visibility responsibilities toward dedicated observability tooling.*
 
-## 🏛️ Architectural Decision
+## ⚙️ Core Implementation
+
+*Analyzed application runtime dependencies and infrastructure-awareness patterns within Kubernetes environments.*
+
+- *Removed environment-detection variables to preserve application-level environment abstraction*
+
+    ![alt text](screenshots/screenshot07.png)
+
+- *Created and validated all required Kubernetes deployment resources*
+
+    ![alt text](screenshots/screenshot08.png)
+
+## 🏛️ Architectural Decisions
 
 ***Context:***
 
@@ -73,19 +85,7 @@ A production-oriented Kubernetes implementation focused on validating environmen
 
 *Removed the internal metadata provider to later implement **`Prometheus-based service discovery`**, offloading observability to the infrastructure layer where it belongs.*
 
-## 🔧 Key Implementations
-
-*Analyzed application runtime dependencies and infrastructure-awareness patterns within Kubernetes environments.*
-
-- *Removed environment-detection variables to preserve application-level environment abstraction*
-
-    ![alt text](screenshots/screenshot07.png)
-
-- *Created and validated all required Kubernetes deployment resources*
-
-    ![alt text](screenshots/screenshot08.png)
-
-## ⚠️ Challenges & Solutions
+## ⚔️ Challenges & Solutions
 
 The primary challenge involved identifying hidden abstraction layers responsible for runtime environment introspection and understanding how infrastructure-awareness was embedded within application behavior.
 
@@ -97,13 +97,13 @@ The primary challenge involved identifying hidden abstraction layers responsible
 
 - Removed runtime environment-detection variables responsible for infrastructure introspection behavior
 
-## ✅ Outcome
+## 📈 Operational Outcomes
 
 *Successfully validated the UI service within Kubernetes while maintaining an environment-agnostic runtime model.*
 
 *This implementation improved separation of concerns by decoupling infrastructure observability behavior from application-layer logic and reinforced cleaner operational architecture boundaries.*
 
-## 💡 Key Learnings
+## 🎓 Key Learnings
 
 - *Learned to enforce **`clear separation of concerns`** by decoupling observability from application logic, improving system clarity and maintainability.*
 
@@ -117,7 +117,7 @@ The primary challenge involved identifying hidden abstraction layers responsible
 
 *Helm templating all micro services [(read here)](../../helm-template/)*
 
-## 📸 Extra Screenshots
+## 📸 Screenshots
 
 - *Created all K8s resources and validated them*
 
