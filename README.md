@@ -82,12 +82,20 @@
 
 ---
 
-## 💥 Key Improvements Over Original System
+# 🎯 Implementation highlights
 
-- Introduced **persistent storage** (DynamoDB + EBS)
-- Eliminated **hardcoded secrets** using IAM + Secrets Manager + IMDSv2
-- Removed unnecessary dependencies (**Redis, MariaDB**)
-- Optimized container images (**−190MB**)
+* GitOps-driven continuous delivery using ArgoCD with ApplicationSets for scalable multi-environment deployments (`dev`, `stage`, `prod`)
+* Modular Kubernetes platform architecture using Helm, Helmfile, and Kustomize-based configuration management
+* Layered separation of platform and application infrastructure for scalable orchestration and maintainability
+* Dependency-aware deployment workflows with reconciliation, drift correction, and self-healing mechanisms
+* Secure cloud-native secret management using External Secrets Operator, IAM roles, and IMDSv2-based credential-less authentication
+* Principle of Least Privilege (PoLP), RBAC-aware segmentation, and hardened non-root container security practices
+* Stateful and stateless workload engineering using PostgreSQL StatefulSets, DynamoDB integration, and persistent EBS-backed storage
+* Environment-isolated storage, monitoring, logging, and telemetry workflows for operational separation and observability
+* Kubernetes-native service discovery, networking, and production-grade runtime optimization
+* Distributed systems troubleshooting across Kubernetes, IAM, storage, networking, CRDs, Helm templating, and init-container workflows
+* Architecture reverse-engineering, dependency analysis, and infrastructure simplification for production-ready microservices platforms
+* End-to-end validation of scalable, failure-resilient, cloud-native deployment architectures aligned with real-world DevOps practices
 
 ## 📊 Current Status
 

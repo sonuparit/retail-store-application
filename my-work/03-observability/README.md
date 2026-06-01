@@ -4,19 +4,59 @@ This implementation focuses on production-oriented Kubernetes observability prac
 
 ## 📑 Table of Contents
 
+**🧭 Navigation:**
+
+- [Implementation Roadmap](#️-implementation-roadmap)
+- [Project Navigation](#-project-navigation)
+
+**📘 Project Documentation:**
+
 - [Overview](#-overview)
-- [Architecture](#-architecture)
 - [Metrics & Observability Flow](#-metrics--observability-flow)
 - [Repository Structure](#-repository-structure)
 - [Tech Stack](#️-tech-stack)
-- [Core Features](#-core-features)
-- [Implementation Highlights](#️-implementation-highlights)
+- [Features](#-features)
+- [Core Implementation](#️-core-implementation)
 - [Architectural Decisions](#️-architectural-decisions)
-- [Operational Outcomes](#-operational-outcomes)
 - [Challenges & Solutions](#️-challenges--solutions)
+- [Operational Outcomes](#-operational-outcomes)
 - [Key Learnings](#-key-learnings)
 - [Future Improvements](#-future-improvements)
 - [Screenshots](#-screenshots)
+
+## 🗺️ Implementation Roadmap
+
+<p align="left">
+  <img src="./9-Observe.jpg" width="80%"/>
+</p>
+
+## 🔗 Project Navigation
+
+- [Root Directory](https://github.com/sonuparit/retail-store-reverse-engineered)
+
+### 📖 Understanding Phase
+
+- [Source Code Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/src-code)
+- [Architecture Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/architecture)
+- [Containerization (Docker)](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker)
+- [Docker Compose Orchestration](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker-compose)
+
+### ☸️ Kubernetes Implementation Phase
+
+- [Individual Service Testing](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test)
+  - [Carts](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/cart-dynamodb-test)
+  - [Catalog](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/catalog-test)
+  - [Checkout](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/checkout-test)
+  - [Orders](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/orders-postgreSQL-test)
+  - [UI](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/ui-test)
+- [Helm Templating](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helm-template)
+- [Full App Deployment via Helmfile](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helmfile-deploy)
+- [Multi-Environment GitOps via ArgoCD](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/argocd-deploy)
+
+### 📊 Production & Observability
+
+- [Monitoring & Observability](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/03-observability) ← (📍 You are here )
+- [Production-Grade GitOps Workflow](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work)
 
 ## 📖 Overview
 
@@ -68,10 +108,11 @@ The implementation focuses on:
 
 ```txt
 .
-├── 9-Observe.jpg
 ├── README.md
-├── alertmanager
 ├── challenges_&_solutions.md
+├── 9-Observe.jpg
+├── alertmanager
+├── argocd
 ├── kube-state-metrics
 ├── loki
 ├── manifests
@@ -103,11 +144,12 @@ The implementation focuses on:
   - Slack Webhooks
   - Email Notifications
 
-## 🎯 Core Features
+## 🎯 Features
 
 - Centralized metrics collection using Prometheus
 - Centralized logging using Loki + Promtail
 - Real-time alerting with Alertmanager
+- `Slack and Email` integration for alerts
 - PostgreSQL telemetry collection using `postgres-exporter`
 - Kubernetes-native monitoring using `ServiceMonitor`
 - Environment-aware monitoring and logging
@@ -115,209 +157,300 @@ The implementation focuses on:
 - Multi-environment observability workflows
 - Centralized Grafana dashboards and log exploration
 
-## ⚙️ Implementation Highlights
+## ⚙️ Core Implementation
 
-### 1. 📊 Monitoring Stack Deployment
+- ### 1. Monitoring Stack Deployment
 
-Installed a production-oriented monitoring stack using:
+  Installed a production-oriented monitoring stack using Helm charts:
 
-- Prometheus
-- Grafana
-- Alertmanager
-- Node Exporter
-- kube-state-metrics
+  - Prometheus
+  - Grafana
+  - Alertmanager
+  - Node Exporter
+  - kube-state-metrics
 
-via:
+  via:
 
-```bash
-kube-prometheus-stack
-```
+  ```bash
+  kube-prometheus-stack
+  ```
 
-This enabled:
+  This provided:
 
-- Kubernetes cluster monitoring
-- centralized metrics collection
-- Prometheus Operator integration
-- Grafana dashboard support
-- ServiceMonitor CRDs
+  - Centralized metrics collection
+  - Kubernetes cluster monitoring
+  - Grafana dashboard integration
+  - Prometheus Operator support
+  - Alertmanager
+  - ServiceMonitor CRDs
 
-### 2. 🔍 ServiceMonitor-Based Metrics Discovery
+- ### 2. ServiceMonitor-Based Metrics Discovery
 
-Implemented Kubernetes-native monitoring using `ServiceMonitor` resources instead of annotation scraping.
+  Implemented Kubernetes-native monitoring using `ServiceMonitor` resources instead of annotation-based scraping.
 
-```yaml
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-```
+  Created dedicated `ServiceMonitor` manifests for microservices to enable:
 
-This enabled:
-
-- automatic target discovery
-- environment-aware monitoring
-- declarative observability configuration
-- Prometheus Operator integration
   ![alt text](./screenshots/ss32.png)
 
-### 3. 🧩 Helmified Multi-Environment Monitoring
+  - automatic target discovery
+  - Prometheus Operator integration
+  - environment-aware monitoring
+  - declarative observability configuration
 
-Converted observability resources into reusable Helm templates for scalable multi-environment deployments.
+  ```yaml
+  apiVersion: monitoring.coreos.com/v1
+  kind: ServiceMonitor
+  ```
 
-Successfully implemented centralized monitoring for:
+- ### 3. Operational Validation on Single Microservice
 
-- carts
-- checkout
-- orders
-- catalog
-- ui
+  Before scaling observability cluster-wide, initially tested monitoring integration on a single microservice (Catalog).
 
-across:
+  Validated:
 
-- dev
-- stage
-- prod
+  - metrics endpoint exposure
+  - Prometheus target discovery
+  - ServiceMonitor selectors
+  - Grafana metric visibility
+  - Kubernetes service-to-target resolution
+
+  This reduced debugging complexity and enabled controlled observability rollout.
+
+- ### 4. Helmified ServiceMonitors for Multi-Environment Deployment
+
+  Converted observability resources into reusable Helm templates to support scalable multi-service and multi-environment deployments.
+
+  Helmified:
+
+  - labels
+  - Services
+  - ServiceMonitors
+  - environment metadata
+  - namespace-aware monitoring
+
+   ![alt text](./screenshots/ss97.png)
+
+  Successfully implemented centralized metrics aggregation for:
+
+  - carts
+  - checkout
+  - orders
+  - catalog
+  - ui
+
+  across env:
+
+  - dev
+  - stage
+  - prod
 
   ![alt text](./screenshots/ss98.png)
 
-This improved:
+  This enabled:
 
-- observability scalability
-- environment-aware telemetry
-- reusable monitoring workflows
-- cross-service visibility
+  - reusable monitoring architecture
+  - centralized observability
+  - environment-aware metrics discovery
+  - cross-service visibility
+  - simplified GitOps workflows
+  - scalable Kubernetes monitoring
 
-### 4. 💾 Loki & Promtail Logging Pipeline
+- ### 5. Loki & Promtail Deployment with Persistent Storage
 
-Implemented centralized Kubernetes logging using:
+  Installed Loki and Promtail using Helm charts with custom `values.yaml` configuration.
 
-- Loki
-- Promtail
-- Grafana Explore
+  Implemented:
 
-with:
+  - PVC-backed persistent storage
+  - filesystem-based log retention
+  - Promtail Kubernetes discovery
+  - resource-aware deployment configuration
 
-- PVC-backed persistence
-- Kubernetes log discovery
-- label-based querying
-- namespace-aware filtering
+  ![alt text](./screenshots/ss29.png)
 
-Example LogQL queries:
+  This ensured:
 
-```logql
-{app="carts"}
-```
+  - persistent log storage
+  - centralized log ingestion
+  - scalable observability architecture
 
-![alt text](./screenshots/ss106.png)
+- ### 6. Centralized Logging via Loki
 
-and:
+  Implemented centralized Kubernetes logging using:
 
-```logql
-{namespace="dev"}
-```
+  - Loki
+  - Promtail
+  - Grafana Explore
 
-![alt text](./screenshots/ss04.png)
+  to aggregate logs from all microservices into a centralized observability platform.
 
-### 5. 🏷️ Environment-Aware Labeling Strategy
+  Enabled:
 
-Standardized observability metadata labeling using Helm templates:
+  - label-based log querying
+  - namespace-aware filtering
+  - application-specific log searches
+  - real-time log visibility
 
-```yaml
-metadata:
-  labels:
-    app: {{ .Chart.Name }}
-    env: {{ .Release.Namespace }}
-```
+  using LogQL queries such as:
 
-This enabled:
+  ```logql
+  {app="carts"}
+  ```
 
-- clean metrics filtering
-- centralized log separation
-- multi-environment observability
-- Grafana label-based queries
+  ![alt text](./screenshots/ss106.png)
 
----
+  and:
 
-### 6. 📊 Observability Validation
+  ```logql
+  {namespace="dev"}
+  ```
 
-Validated the observability pipeline through:
+  ![alt text](./screenshots/ss04.png)
 
-- Prometheus Targets
-- Grafana Dashboards
-- Loki Explore
-- LogQL Queries
-- PromQL Queries
-- Slack Notifications
-- Email Alerting
+- ### 7. Helmified Environment & Application Labeling Strategy
 
-Successfully verified:
+  Helmified Kubernetes metadata labeling to standardize observability across multiple microservices and environments.
 
-- metrics scraping
-- centralized logging
-- live log ingestion
-- telemetry collection
-- Kubernetes metadata enrichment
+  Implemented reusable labels for:
 
-## 🏗️ Architectural Decisions
+  - application identification
+  - environment separation
+  - namespace-aware observability
 
-### 1. Prometheus Operator-Based Monitoring
+  using:
 
-Used `kube-prometheus-stack` with `ServiceMonitor` CRDs for Kubernetes-native metrics discovery.
+  ```yaml
+  metadata:
+    labels:
+      app: {{ .Chart.Name }}
+      env: {{ .Release.Namespace }}
+  ```
 
-Why
+  This enabled:
 
-- declarative monitoring
-- scalable metrics discovery
-- Prometheus Operator integration
-- easier long-term maintainability
+  - clean metrics filtering
+  - centralized log separation
+  - multi-environment observability
+  - Grafana label-based queries
+  - reusable environment-aware deployments
 
-### 2. Centralized Logging Architecture
+- ### 8. Troubleshooting & Operational Problem Solving
 
-Implemented:
+  Resolved multiple production-oriented observability challenges during implementation, including:
 
-- Loki for storage
-- Promtail for collection
-- Grafana for querying
+  - Prometheus target discovery failures
+  - ServiceMonitor selector mismatches
+  - Incorrect ServiceMonitor port configuration
+  - Environment label propagation
+  - Promtail CrashLoopBackOff
+  - Loki integration issues
+  - Linux filesystem watcher exhaustion
+  - Kubernetes service-to-container port mapping confusion
+  - Understood Postgre exporter architecture
 
-Why
+  This significantly improved operational understanding of:
 
-- centralized cluster-wide logging
-- label-based querying
-- easier cross-service debugging
+  - Prometheus Operator internals
+  - Kubernetes networking
+  - Centralized logging architecture
+  - Linux kernel tuning
+  - Observability scaling considerations
+  - Postgre exporter
 
-### 3. Environment-Based Observability Segregation
+- ### 9. Observability Validation
 
-Implemented namespace-aware labeling for:
+  Validated the complete observability pipeline through:
 
-- metrics
-- logs
-- telemetry queries
+  - Prometheus Targets
+  - Grafana Dashboards
+  - Loki Explore
+  - LogQL Queries
+  - PromQL Queries
+  - Custom alerting
+  - Email & Slack Notification
 
-Why
+  Successfully verified:
 
-- cleaner multi-environment isolation
-- faster troubleshooting
-- safer operational workflows
+  - metrics scraping
+  - multi-environment monitoring
+  - centralized logging
+  - live log ingestion
+  - application-level telemetry
+  - Kubernetes metadata enrichment
 
----
+## 🏛️ Architectural Decisions
 
-### 4. Helm-Based Observability Standardization
+- ### 1. Prometheus Operator-Based Monitoring
 
-Standardized observability resources through reusable Helm templates.
+  Used `kube-prometheus-stack` with `ServiceMonitor` CRDs for Kubernetes-native metrics discovery.
 
-Why
+  Why
 
-- reduced configuration duplication
-- scalable environment management
-- reusable observability workflows
+  - declarative monitoring
+  - scalable metrics discovery
+  - Prometheus Operator integration
+  - easier long-term maintainability
 
-## 📈 Operational Outcomes
+- ### 2. Centralized Logging Architecture
 
-- Achieved centralized monitoring across multiple Kubernetes environments
-- Implemented cluster-wide centralized logging and log aggregation
-- Enabled environment-aware metrics and log isolation
-- Improved troubleshooting visibility through unified observability workflows
-- Standardized observability configuration using reusable Helm templates
-- Improved operational visibility into PostgreSQL and Kubernetes workloads
-- Integrated real-time alert delivery through Slack and email notifications
+  Implemented:
+
+  - Loki for storage
+  - Promtail for collection
+  - Grafana for querying
+
+  Why
+
+  - centralized cluster-wide logging
+  - label-based querying
+  - easier cross-service debugging
+
+- ### 3. Environment-Based Observability Segregation
+
+  Implemented namespace-aware labeling for:
+
+  - metrics
+  - logs
+  - telemetry queries
+
+  Why
+
+  - cleaner multi-environment isolation
+  - faster troubleshooting
+  - safer operational workflows
+
+- ### 4. Postgre Exporter [(view implementation)](./postgresql/)
+
+  Used dedicated exporters such as:
+
+  - `postgres-exporter`
+
+  Why
+
+  - Decoupled observability architecture
+  - Standardized Prometheus metrics exposure
+  - Easier monitoring scalability
+
+- ### 5. Helm-Based Observability Standardization
+
+  Standardized observability resources through reusable Helm templates.
+
+  Why
+
+  - reduced configuration duplication
+  - scalable environment management
+  - reusable observability workflows
+
+- ### 6. Kubernetes-Native Observability Stack
+
+  Built the entire monitoring and logging pipeline using Kubernetes-native controllers and CRDs.
+
+  Why
+
+  - Better ecosystem integration
+  - Declarative infrastructure management
+  - Easier operational automation
+  - Production-style observability workflows
 
 ## ⚔️ Challenges & Solutions
 
@@ -331,7 +464,17 @@ Why
 | Postgre Exporter        | Exporter architecture confusion             | Created architecture validation diagrams          |
 | Multi-env Observability | Logs/metrics mixed across environments      | Implemented environment-aware labeling            |
 
-## 🧠 Key Learnings
+## 📈 Operational Outcomes
+
+- Achieved centralized monitoring across multiple Kubernetes environments
+- Implemented cluster-wide centralized logging and log aggregation
+- Enabled environment-aware metrics and log isolation
+- Improved troubleshooting visibility through unified observability workflows
+- Standardized observability configuration using reusable Helm templates
+- Improved operational visibility into PostgreSQL and Kubernetes workloads
+- Integrated real-time alert delivery through Slack and email notifications
+
+## 🎓 Key Learnings
 
 - Learned how Prometheus Operator manages monitoring through CRDs and reconciliation
 - Improved understanding of Kubernetes networking and service discovery
@@ -340,7 +483,7 @@ Why
 - Improved observability design through structured labeling and metadata enrichment
 - Strengthened troubleshooting methodology through runtime validation and telemetry analysis
 
-## 🤖 Future Improvements
+## ⭐ Future Improvements
 
 - EKS deployment
 - Terraform provisioning

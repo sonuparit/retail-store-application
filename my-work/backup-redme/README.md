@@ -1,4 +1,4 @@
-# 🚀 Observability layer Implementation
+# 🚀 BackUp
 
 > [!NOTE]
 > Beyond this implementation, the Application layer of the project was deployed on AWS EKS Auto Mode, Terraform-provisioned infrastructure, and full ArgoCD-driven GitOps CI/CD workflows. [(View Implementation)](https://github.com/sonuparit/terraform-gitops-pipeline)

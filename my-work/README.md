@@ -1,377 +1,577 @@
 # 🚀 Production-Oriented GitOps Platform on Kubernetes
 
+> [!NOTE]
+> Beyond this implementation, the Application layer of the project was deployed on AWS EKS Auto Mode, Terraform-provisioned infrastructure, and full ArgoCD-driven GitOps CI/CD workflows. [(View Implementation)](https://github.com/sonuparit/terraform-gitops-pipeline)
+
 This project implements a production-oriented Kubernetes platform focused on GitOps-driven deployments, layered infrastructure separation, multi-environment orchestration, persistent workloads, and operational scalability.
 
-The platform integrates:
+## 📑 Table of Contents
 
-* Kubernetes
-* ArgoCD
-* Helm
-* External Secrets Operator
-* PostgreSQL
-* Centralized Observability
-* Multi-Environment Deployments
-* GitOps-based Continuous Delivery
+**🧭 Navigation:**
 
----
+- [Implementation Roadmap](#️-implementation-roadmap)
+- [Project Navigation](#-project-navigation)
 
-# 📑 Table of Contents
+**📘 Project Documentation:**
 
-1. [Overview](#-overview)
-2. [Platform Architecture](#-platform-architecture)
-3. [Repository Architecture](#-repository-architecture)
-4. [Core Platform Capabilities](#-core-platform-capabilities)
-5. [Deployment Workflow](#-deployment-workflow)
-6. [Architectural Decisions](#️-architectural-decisions)
-7. [Operational Outcomes](#-operational-outcomes)
-8. [Challenges & Solutions](#️-challenges--solutions)
-9. [Key Learnings](#-key-learnings)
-10. [Platform Layers](#-platform-layers)
-11. [Future Improvements](#-future-improvements)
+- [Overview](#-overview)
+- [Architecture](#️-architecture)
+- [Repository Structure](#-repository-structure)
+- [Tech Stack](#️-tech-stack)
+- [Deployment Guide](#-deployment-guide)
+- [Features](#-features)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#️-architectural-decisions)
+- [Challenges & Solutions](#️-challenges--solutions)
+- [Operational Outcomes](#-operational-outcomes)
+- [Key Learnings](#-key-learnings)
+- [Future Improvements](#-future-improvements)
 
----
+## 🗺️ Implementation Roadmap
 
-# 📖 Overview
+<p align="left">
+  <img src="./10-final.jpg" width="80%"/>
+</p>
 
-This platform was designed to simulate production-style Kubernetes and GitOps workflows while remaining lightweight enough for local experimentation and rapid iteration.
+## 🔗 Project Navigation
 
-The implementation focuses on:
+- [Root Directory](https://github.com/sonuparit/retail-store-reverse-engineered)
 
-* Multi-environment deployments (`dev`, `stage`, `prod`)
-* GitOps-based continuous reconciliation
-* Dependency-aware deployment orchestration
-* Layered platform architecture
-* Stateful workload persistence
-* Infrastructure separation
-* Operational observability
-* Kubernetes-native deployment workflows
+### 📖 Understanding Phase
 
-The platform uses:
+- [Source Code Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/src-code)
+- [Architecture Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/architecture)
+- [Containerization (Docker)](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker)
+- [Docker Compose Orchestration](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker-compose)
 
-* **ArgoCD** for GitOps orchestration
-* **Helm** for reusable templating
-* **External Secrets Operator** for secret synchronization
-* **Prometheus + Grafana** for observability
-* **Loki + Promtail** for centralized logging
-* **PostgreSQL** for stateful workloads
-* **Kind Kubernetes cluster** running on EC2
-* **EBS-backed persistent storage**
+### ☸️ Kubernetes Implementation Phase
 
----
+- [Individual Service Testing](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test)
+  - [Carts](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/cart-dynamodb-test)
+  - [Catalog](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/catalog-test)
+  - [Checkout](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/checkout-test)
+  - [Orders](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/orders-postgreSQL-test)
+  - [UI](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/ui-test)
+- [Helm Templating](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helm-template)
+- [Full App Deployment via Helmfile](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helmfile-deploy)
+- [Multi-Environment GitOps via ArgoCD](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/argocd-deploy)
 
-# 🗼 Platform Architecture
+### 📊 Production & Observability
 
-![alt text](screenshots/platform-architecture.jpg)
+- [Monitoring & Observability](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/03-observability)
+- [Production-Grade GitOps Workflow](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work) ← (📍 You are here )
 
----
+## 📖 Overview
 
-# 🏗️ Repository Architecture
+This platform simulates a production-grade Kubernetes and GitOps environment, designed for multi-environment application delivery, operational observability, and scalable platform engineering.
+
+**What was built:**
+
+- GitOps-first deployment model with ArgoCD as the single reconciliation controller
+- Multi-environment Kubernetes (dev / stage / prod) on a single Kind cluster running on EC2
+- Layered platform architecture separating infrastructure, platform services, application workloads, and observability
+- Dependency-aware deployment orchestration using ArgoCD Sync Waves and custom Lua health checks
+- Centralized monitoring (Prometheus + Grafana), logging (Loki + Promtail), and alerting (Alertmanager + Slack)
+- Stateful workload persistence via EBS-backed PostgreSQL and managed DynamoDB
+
+**Scale:** 5-service microservice retail application — UI, Catalog, Cart, Checkout, Orders
+
+## 🏗️ Architecture
+
+![alt text](./screenshots/arch.jpg)
+
+## 📂 Repository Structure
 
 The repository is organized into layered operational domains to improve scalability, maintainability, deployment separation, and platform ownership boundaries.
 
-## Architectural Layers
+| Layer              | Responsibility                                                               |
+| ------------------ | ---------------------------------------------------------------------------- |
+| bootstrap/         | Platform bootstrap scripts and deployment initialization                     |
+| 01-infrastructure/ | Persistent storage, infrastructure dependencies, and provisioning components |
+| 02-platform/       | Shared Kubernetes platform services and cluster-level dependencies           |
+| 03-observability/  | Monitoring, logging, telemetry and operational visibility                    |
+| 04-applications/   | Multi-environment application workloads and deployment manifests             |
+| screenshots/       | Deployment validation and operational workflow screenshots                   |
 
-| Layer             | Responsibility                                                               |
-| ----------------- | ---------------------------------------------------------------------------- |
-| `bootstrap/`      | Platform bootstrap scripts and deployment initialization                     |
-| `platform/`       | Shared Kubernetes platform services and cluster-level dependencies           |
-| `applications/`   | Multi-environment application workloads and deployment manifests             |
-| `observability/`  | Monitoring, logging, telemetry, dashboards, and operational visibility       |
-| `infrastructure/` | Persistent storage, infrastructure dependencies, and provisioning components |
-| `screenshots/`    | Deployment validation and operational workflow screenshots                   |
+## 🛠️ Tech Stack
 
-## Repository Evolution
+- ### ☸️ Container Orchestration
 
-As the platform evolved, the repository structure was refactored to separate infrastructure, observability, platform services, and application workloads into dedicated operational layers.
+  - Docker
+  - Kubernetes
+  - Kind (Kubernetes in Docker)
 
-This restructuring improved:
+- ### 🚀 GitOps & Deployment
 
-* Separation of concerns
-* Deployment scalability
-* GitOps maintainability
-* Operational visibility integration
-* Environment isolation
-* Long-term platform extensibility
+  - ArgoCD
+  - Helm
+  - Helm Charts
 
----
+- ### 📦 Infrastructure & Platform
 
-# 🎯 Core Platform Capabilities
+  - AWS
+  - External Secrets Operator (ESO)
 
-* GitOps-based continuous deployment using ArgoCD
-* Multi-environment Kubernetes deployments
-* Layered infrastructure separation
-* Dependency-aware deployment orchestration
-* External Secrets Operator integration
-* Stateful PostgreSQL workloads
-* Persistent EBS-backed storage
-* Centralized observability workflows
-* Kubernetes-native monitoring and logging
-* Environment-aware telemetry isolation
-* Reusable Helm-based deployments
-* Runtime reconciliation and recovery workflows
-* RBAC-aware platform segmentation
+- ### 📊 Monitoring & Metrics
 
----
+  - Prometheus
+  - Prometheus Operator
+  - kube-prometheus-stack
+  - Grafana
+  - postgres-exporter
+  - kube-state-metrics
 
-# 📦 Deployment Workflow
+- ### 📜 Logging & Observability
 
-This section outlines the deployment flow for the current platform architecture.
+  - Loki
+  - Promtail
+  - Grafana Explore
+
+- ### 🚨 Alerting
+
+  - Alertmanager
+  - Slack Webhooks
+  - Email Notifications
+
+- ### 🗄️ Stateful Infrastructure
+
+  - PostgreSQL
+  - Persistent Volumes
+  - EBS-backed storage
+  - Managed DynamoDB service
+
+- ### 🔐 Security & Access Control
+
+  - RBAC
+  - ArgoCD Projects
+  - Principle of Least Privilege (PoLP)
+  - AWS Secrets Manager
+  - IMDSv2
+  - IAM Policy
+
+- ### 🌐 Networking & Service Discovery
+
+  - Kubernetes Services
+  - Headless Services
+  - ServiceMonitors
+  - CoreDNS
+
+- ### ⚙️ Automation & Scripting
+
+  - Bash scripting
+  - Lua (ArgoCD Health Checks)
+
+## 📦 Deployment Guide
+
+This section walks through deploying the full multi-environment GitOps setup on a kind Kubernetes cluster running on EC2.
 
 > [!NOTE]
-> The repository structure evolved significantly as observability and platform-wide operational layers were introduced.
+> Kind was used for cost-efficient local Kubernetes simulation and rapid environment iteration.
 
-## 1. Infrastructure Preparation
+### Prerequisites
 
-Prepare required infrastructure components:
+**Infra:**
 
-* EC2 instance
-* Attached EBS volume
-* DynamoDB table
-* AWS Secrets Manager secrets
-* IAM permissions
+1. **EC2 instance** (recommended flex.large for multi env)
 
----
+2. **EBS volume** attached to EC2 and mounted for persistence services
 
-## 2. Cluster Bootstrap
+3. **Dynamodb** for carts service with:
 
-Create the Kubernetes cluster and initialize required storage mounts and networking configuration.
+    ```bash
+    table: Item   |  index: idx_global_cutomerId
+        id: id    |    key: customerId
+    ```
 
-```bash id="5j3lyq"
-kind create cluster --name retail --config kind-config.yml
-```
+    ![alt text](screenshots/screenshot33.png)
 
----
+4. **AWS Sercrets Manager** with secrets configured:
 
-## 3. Platform Layer Deployment
+5. **IAM role for EC2** with permissions:
 
-Deploy shared platform services:
+    - dynamodb read and write access
+    - secrets manager read access
 
-* ArgoCD
-* External Secrets Operator
-* ClusterSecretStore
-* Shared Kubernetes resources
+6. **Metadata response hop limit** for EC2 set to: `5`
 
----
+Tools:
 
-## 4. GitOps Initialization
+1. Docker installed and running
+2. kubectl
+3. helm
+4. Kind
 
-Bootstrap:
+Steps:
 
-* ArgoCD Projects
-* Root applications
-* Sync-wave orchestration
-* Dependency-aware synchronization
+1. Clone the repo and get into `bootstrap`
 
----
+    ```bash
+    git clone https://github.com/sonuparit/retail-store-reverse-engineered.git
 
-## 5. Application Deployment
+    cd /retail-store-reverse-engineered/my-work/bootstrap/
+    ```
 
-Deploy multi-environment workloads using:
+2. Run the script and follow instructions:
 
-* Helm charts
-* ApplicationSets
-* Namespace-aware configuration
+    ```bash
+    chmod 700 bootstrap.sh
+    bash bootstrap.sh
+    ```
 
----
+3. Once ArgoCD shows all apps green in UI, run second script and follow instructions:
 
-## 6. Observability Stack Deployment
+    ```bash
+    chmod 700 port-forward.sh
+    bash port-forward.sh
+    ```
 
-Deploy:
+4. Validate:
 
-* Prometheus
-* Grafana
-* Loki
-* Promtail
-* Alertmanager
-* Exporters
+    - ArgoCD synchronization
+    - Kubernetes reconciliation
+    - Secret injection
+    - Persistent storage
+    - Metrics collection
+    - Centralized logging
+    - Multi-environment isolation
+    - End-to-end Application operational validation
 
-➡️ [View Observability Implementation](../03-observability/)
+      ![alt text](screenshots/ss50.png)
 
----
+      ![alt text](screenshots/ss81.png)
 
-## 7. Runtime Validation
+      ![alt text](screenshots/ss25.png)
 
-Validate:
+      ![alt text](screenshots/ss37.png)
 
-* ArgoCD synchronization
-* Kubernetes reconciliation
-* Secret injection
-* Persistent storage
-* Metrics collection
-* Centralized logging
-* Multi-environment isolation
+      ![alt text](screenshots/ss44.png)
 
----
+      ![alt text](screenshots/ss89.png)
 
-# 🏗️ Architectural Decisions
+      ![alt text](screenshots/ss102.png)
 
-## 1. GitOps-First Deployment Model
+## 🎯 Features
 
-### The Decision
+- GitOps-driven continuous delivery workflows using ArgoCD
+- Multi-environment Kubernetes deployments (dev, stage, prod)
+- ApplicationSet-based environment orchestration and scalable GitOps management
+- Layered platform and application infrastructure separation
+- Dependency-aware deployment orchestration using sync ordering and Lua health checks
+- Principle of Least Privilege (PoLP)-oriented platform segmentation design
+- ServiceMonitors for ArgoCD monitoring
 
-Adopted ArgoCD as the primary deployment controller.
+## ⚙️ Core Implementation
 
-### Why
+- ### 1. GitOps Architecture Refactor
 
-* Continuous reconciliation
-* Drift detection
-* Declarative deployments
-* Environment scalability
+  Refactored an imperative Bash-based deployment workflow into a declarative GitOps-driven platform using ArgoCD as the centralized deployment controller.
 
----
+  This enabled:
 
-## 2. Layered Repository Architecture
+  - Continuous reconciliation
+  - Declarative infrastructure management
+  - Scalable multi-environment deployments
+  - Cleaner operational workflows
 
-### The Decision
+- ### 2. Layered Repository & Platform Segmentation
 
-Separated the platform into:
+  Re-architected the repository into dedicated operational layers:
 
-* Infrastructure Layer
-* Platform Layer
-* Application Layer
-* Observability Layer
+  - Infrastructure
+  - Platform
+  - Observability
+  - Applications
 
-### Why
+  Implemented scoped ArgoCD Projects and deployment boundaries to support:
 
-* Clear operational boundaries
-* Easier dependency management
-* Reduced coupling
-* Better maintainability
+  - Principle of Least Privilege (PoLP)
+  - RBAC-aware segmentation
+  - Clear separation of concerns
+  - Safer GitOps operations
+  - Improved dependency management
 
----
+- ### 3. Dependency-Aware Deployment Orchestration
 
-## 3. Dependency-Aware Synchronization
+  Implemented deployment sequencing using:
 
-### The Decision
+  - ArgoCD Sync Waves
+  - Custom Lua Health Checks
+  - Reconciliation-aware synchronization
 
-Implemented synchronization ordering using:
+  This solved deployment ordering instability and enabled:
 
-* ArgoCD Sync Waves
-* Health-based orchestration
-* Reconciliation-aware workflows
+  - Deterministic layered deployments
+  - Reliable health validation
+  - Safer progressive rollouts
+  - Stable dependency-aware orchestration
 
-### Why
+- ### 4. Automated ArgoCD Health Configuration Reloading
 
-* Prevent race conditions
-* Improve deployment reliability
-* Ensure dependency readiness
+  Enhanced ArgoCD installation automation to automatically restart:
 
----
+  - ArgoCD Repo Server
+  - ArgoCD Server
 
-## 4. Stateful Workload Persistence
+  after configuration and health-check updates.
 
-### The Decision
+  This enabled:
 
-Implemented persistent PostgreSQL workloads using EBS-backed storage.
+  - Reliable Lua health-check enforcement
+  - Automated configuration propagation
+  - Consistent deployment synchronization behavior
 
-### Why
+- ### 5. Dependency-Aware Observability Deployment
 
-* Durable application state
-* Environment-level isolation
-* Persistent cluster recreation workflows
+  Resolved Prometheus target discovery failures caused by premature `ServiceMonitor` deployment before CRD availability.
 
----
+  Reorganized observability resources into a dedicated deployment layer with proper sequencing.
 
-## 5. Kubernetes-Native Operational Design
+  This enabled:
 
-### The Decision
+  - Reliable ServiceMonitor discovery
+  - Stable metrics collection
+  - Proper CRD-aware deployment orchestration
+  - Cleaner observability architecture
 
-Relied heavily on Kubernetes-native controllers, reconciliation, and CRDs.
+- ### 6. Production-Oriented Operational Engineering
 
-### Why
+  Solved multiple platform-level operational challenges involving:
 
-* Better ecosystem integration
-* Reduced orchestration complexity
-* Improved operational consistency
+  - Kubernetes reconciliation behavior
+  - CRD dependency timing
+  - ArgoCD synchronization logic
+  - Health validation workflows
+  - RBAC and permission scoping
+  - Deployment dependency management
 
----
+  This significantly improved platform reliability, operational scalability, and production-oriented GitOps design understanding.
 
-# 📈 Operational Outcomes
+## 🏛️ Architectural Decisions
 
-* Successfully implemented a production-oriented GitOps platform using Kubernetes and ArgoCD
-* Validated simultaneous multi-environment deployments on a single cluster
-* Established separation between infrastructure, platform, application, and observability layers
-* Improved deployment reliability through dependency-aware synchronization
-* Implemented persistent storage workflows for stateful workloads
-* Integrated centralized monitoring, logging, and alerting pipelines
-* Reduced orchestration complexity by leveraging Kubernetes reconciliation behavior
-* Improved operational visibility across workloads and environments
-* Established scalable repository organization aligned with platform-engineering practices
+- ### 1. GitOps-First Deployment Model
 
----
+  Adopted ArgoCD as the primary deployment controller.
 
-# ⚔️ Challenges & Solutions
+  Why
 
-This implementation introduced multiple platform-level orchestration and operational challenges while integrating GitOps workflows, observability, stateful workloads, and multi-environment deployments.
+  - Continuous reconciliation
+  - Drift detection
+  - Declarative deployments
+  - Environment scalability
 
-| Area                         | Challenge                                                      | Solution                                                        |
-| ---------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------- |
-| GitOps Orchestration         | Applications synced before dependencies became healthy         | Implemented dependency-aware synchronization using Sync Waves   |
-| Runtime Readiness            | Deployment order did not guarantee application readiness       | Relied on Kubernetes reconciliation behavior                    |
-| Multi-Environment Deployment | Environment isolation became difficult as complexity increased | Implemented namespace-aware separation and layered architecture |
-| Repository Scalability       | Platform growth created operational coupling                   | Refactored into dedicated platform layers                       |
-| Stateful Workloads           | Persistent storage required environment isolation              | Implemented dedicated storage separation workflows              |
-| Observability Integration    | Metrics and logging pipelines required centralized visibility  | Introduced platform-wide observability architecture             |
+- ### 2. Layered Repository Architecture
 
-➡️ Detailed implementation-specific challenges are documented within their respective layers.
+  Separated the platform into:
 
----
+  - Infrastructure Layer
+  - Platform Layer
+  - Application Layer
+  - Observability Layer
 
-# 🧠 Key Learnings
+  Why
 
-* GitOps manages desired state — not runtime readiness
-* Kubernetes reconciliation can eliminate unnecessary orchestration complexity
-* Deployment order and runtime readiness are separate concerns
-* Multi-environment deployments require strict operational separation
-* Stateful workloads require infrastructure-aware persistence design
-* Platform scalability depends heavily on repository architecture and operational boundaries
-* Observability becomes critical as deployment complexity increases
-* Kubernetes troubleshooting often requires validating infrastructure, orchestration, and runtime layers independently
+  - Clear operational boundaries
+  - Easier dependency management
+  - Reduced coupling
+  - Better maintainability
 
----
+- ### 3. Dependency-Aware Deployment Sequencing
 
-# 🧩 Platform Layers
+  Implemented layered deployment synchronization using:
 
-## 🚀 Platform & GitOps
+  - ArgoCD Sync Waves
+  - Custom Lua Health Checks
 
-* ArgoCD
-* Helm
-* Sync Waves
-* Health Checks
-* External Secrets Operator
+  Why
 
-## 📦 Applications
+  - Prevent race conditions
+  - Ensure foundational services become healthy before dependent deployments
+  - Improve deployment reliability
 
-* carts
-* catalog
-* checkout
-* orders
-* ui
+- ### 4. Stateful Workload Persistence
 
-## 📊 Observability
+  Implemented persistent PostgreSQL workloads using EBS-backed storage.
 
-* Prometheus
-* Grafana
-* Loki
-* Promtail
-* Alertmanager
+  Why
 
-➡️ [View Observability Layer](../03-observability/)
+  - Durable application state
+  - Environment-level isolation
+  - Persistent cluster recreation workflows
 
-## 🗄️ Stateful Infrastructure
+- ### 5. Principle of Least Privilege (PoLP)
 
-* PostgreSQL
-* Persistent Volumes
-* EBS-backed storage
+  Implemented scoped ArgoCD Projects and resource separation.
 
----
+  Why
 
-# 🤖 Future Improvements
+  - Reduced blast radius
+  - Safer GitOps operations
+  - Better production-grade security posture
 
-* EKS migration
-* Terraform-based provisioning
-* Full CI/CD automation
-* Distributed tracing
-* Backup and disaster recovery workflows
-* Progressive delivery workflows
-* Policy-as-code integration
+- ### 6. Kubernetes-Native Operational Design
+
+  Relied heavily on Kubernetes-native controllers, reconciliation, and CRDs.
+
+  Why
+
+  - Better ecosystem integration
+  - Reduced orchestration complexity
+  - Improved operational consistency
+
+## ⚔️ Challenges & Solutions
+
+- ### 1. Architectural Refactor for GitOps Adoption
+
+  - **⚔️ Challenge:**\
+    Initial infrastructure provisioning relied on sequential Bash scripts for ArgoCD, applications, monitoring, and logging deployments. While functional during iterative development, the approach was not aligned with GitOps workflows.
+
+  - **🔍 Analysis:**\
+    To implement GitOps properly, ArgoCD needed to become the single deployment controller responsible for continuous reconciliation and application lifecycle management.
+
+  - **🧠 Root Cause:**\
+    The repository structure was originally optimized for imperative script-based deployments rather than declarative GitOps operations.
+
+  - **✅ Solution:**\
+    Refactored the repository architecture to support GitOps-driven deployments through ArgoCD.
+
+    **This enabled:**
+    - Declarative infrastructure and application management
+    - Cleaner deployment workflows
+    - Easier environment scalability
+    - Centralized synchronization via ArgoCD
+
+  - **📚 Lesson Learned:**\
+    Design repositories around the target operational model from the beginning. Retrofitting architecture later becomes significantly more expensive.
+
+- ### 2. ArgoCD Project Permission Segmentation
+
+  - **⚔️ Challenge:**\
+    All deployments were initially running under ArgoCD's default project with broad cluster-wide permissions. I wanted to implement stricter project isolation and resource scoping.
+
+  - **🔍 Analysis:**\
+    Production-grade GitOps requires separation between cluster-scoped and namespace-scoped resources to enforce security boundaries and reduce blast radius.
+
+  - **🧠 Root Cause:**\
+    The repository lacked architectural separation between infrastructure, platform, observability, and application layers, making Principle of Least Privilege (PoLP) implementation difficult.
+
+  - **✅ Solution:**\
+    Re-architected the repository into dedicated deployment layers:
+    - **Infrastructure Layer** → Kind, Terraform
+    - **Platform Layer** → ESO and shared platform services
+    - **Observability Layer** → Prometheus stack, exporters, logging
+    - **Application Layer** → Business applications and services
+
+      ![alt text](./screenshots/arch.jpg)
+
+    Implemented ArgoCD Projects with scoped permissions and controlled deployment boundaries.
+
+    **This enabled:**
+    - Principle of Least Privilege (PoLP)
+    - Clear separation of concerns
+    - Safer RBAC implementation
+    - Better dependency management between layers
+    - Production-grade GitOps organization
+
+  - **📚 Lesson Learned:**\
+    Strong architecture simplifies security, scalability, and operational control.
+
+- ### 3. Layered Deployment Synchronization Failure
+
+  - **⚔️ Challenge:**\
+    ArgoCD was deploying all layers simultaneously despite sync wave configuration. Applications eventually recovered through Kubernetes reconciliation, but deployment ordering was unreliable.
+
+  - **🔍 Analysis:**\
+    Sync waves alone were insufficient because ArgoCD could not accurately determine application health states during deployment.
+
+  - **🧠 Root Cause:**\
+    Custom applications lacked health checks, preventing ArgoCD from validating readiness before progressing to dependent layers.
+
+  - **✅ Solution:**\
+    Implemented custom Lua health checks for ArgoCD to enforce proper health validation and layered deployment sequencing.
+
+    **This enabled:**
+    - Deterministic deployment ordering
+    - Safer progressive rollouts
+    - Reduced deployment instability
+    - Reliable dependency-aware synchronization
+
+  - **📚 Lesson Learned:**\
+    Deployment orchestration is only as reliable as the health signals provided to the controller.
+
+- ### 4. Lua Health Checks Not Taking Effect
+
+  - **⚔️ Challenge:**\
+    After implementing Lua health checks, ArgoCD still continued deploying layers in parallel.
+
+  - **🔍 Analysis:**\
+    The Lua scripts were valid, but ArgoCD was not applying the updated health configurations.
+
+  - **🧠 Root Cause:**\
+    ArgoCD Repo Server and ArgoCD Server required restarts to reload the newly applied project configurations and Lua health scripts.
+
+  - **✅ Solution:**\
+    Updated the ArgoCD installation automation to automatically restart:
+    - ArgoCD Repo Server
+    - ArgoCD Server
+
+    after project and health configuration changes.
+
+    **This enabled:**
+    - Reliable health check enforcement
+    - Consistent layered deployments
+    - Fully automated configuration propagation
+
+  - **📚 Lesson Learned:**\
+    Configuration changes are ineffective unless the consuming services reload them correctly.
+
+- ### 5. ArgoCD ServiceMonitors Missing in Prometheus
+
+  - **⚔️ Challenge:**\
+    ArgoCD ServiceMonitors existed in Kubernetes but were not visible in Prometheus, resulting in missing metrics collection.
+
+  - **🔍 Analysis:**\
+    No immediate errors were visible. After reapplying configurations post-monitoring stack deployment, the ServiceMonitors appeared and metrics collection resumed.
+
+  - **🧠 Root Cause:**\
+    ArgoCD attempted to create ServiceMonitor resources before the Prometheus Operator CRDs were installed. Since the CRDs did not yet exist, Kubernetes silently ignored the resources.
+
+  - **✅ Solution:**\
+    Removed ServiceMonitor creation from the ArgoCD Helm values configuration and moved monitoring resources into the dedicated Observability layer. Deployment sequencing ensured ServiceMonitors were only applied after Prometheus Operator CRDs became available.
+
+    **This enabled:**
+    - Reliable Prometheus target discovery
+    - Stable metrics collection
+    - Proper dependency-aware resource deployment
+    - Cleaner observability architecture
+
+  - **📚 Lesson Learned:**\
+    CRD-dependent resources must only be deployed after their controllers and CRDs are fully available.
+
+## 📈 Operational Outcomes
+
+- Successfully implemented a production-oriented GitOps platform using Kubernetes and ArgoCD
+- Validated simultaneous multi-environment deployments on a single cluster
+- Established separation between infrastructure, platform, application, and observability layers
+- Improved deployment reliability through dependency-aware synchronization
+- Implemented persistent storage workflows for stateful workloads
+- Integrated centralized monitoring, logging, and alerting pipelines
+- Reduced orchestration complexity by leveraging Kubernetes reconciliation behavior
+- Improved operational visibility across workloads and environments
+- Established scalable repository organization aligned with platform-engineering practices
+
+## 🧠 Key Learnings
+
+- GitOps manages desired state — not runtime readiness
+- Kubernetes reconciliation can eliminate unnecessary orchestration complexity
+- Deployment order and runtime readiness are separate concerns
+- Multi-environment deployments require strict operational separation
+- Stateful workloads require infrastructure-aware persistence design
+- Platform scalability depends heavily on repository architecture and operational boundaries
+- Observability becomes critical as deployment complexity increases
+- Kubernetes troubleshooting often requires validating infrastructure, orchestration, and runtime layers independently
+
+## 🤖 Future Improvements
+
+- EKS migration
+- Terraform-based provisioning
+- Full CI/CD automation

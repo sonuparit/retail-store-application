@@ -10,7 +10,6 @@ Challenges and Solutions section only
   - [Loki Log Aggregation](#3-loki-log-aggregation)
   - [Alerting Pipeline](#4-alerting-pipeline)
   - [Multi-Environment Monitoring](#5-multi-environment-monitoring)
-  - [GitOps CD with ArgoCD](#6-gitops-cd-with-argocd)
 
 ## ⚔️ Challenges & Solutions
 
@@ -70,8 +69,6 @@ This project involved building and operating a production-style Kubernetes obser
 
   - **📚 Lesson Learned:**\
   Observability components often introduce additional network paths and service boundaries. Understanding the communication flow between exporters, applications, and monitoring systems is critical for designing correct Kubernetes Service architectures and avoiding misconfigured monitoring pipelines.
-
----
 
 - ### ❌ 1.2 Exporter Connecting to Wrong Service
 
@@ -155,8 +152,6 @@ This project involved building and operating a production-style Kubernetes obser
   - **📚 Lesson Learned:**\
       Kubernetes DNS resolution depends entirely on actual Service resource names, not labels or selectors. Verifying Service discovery directly through Kubernetes resources is essential when troubleshooting inter-service communication and exporter connectivity issues.
 
----
-
 - ### 🔐 1.4 PostgreSQL Monitoring Permission Issues
 
   - **⚔️ Challenge:**\
@@ -194,8 +189,6 @@ This project involved building and operating a production-style Kubernetes obser
 
   - **📚 Lesson Learned:**\
         Successful database connectivity alone is insufficient for observability workflows. Monitoring systems often require elevated read permissions to access internal performance and statistics views needed for production-grade telemetry collection.
-
----
 
 ### 2. Prometheus Metrics Collection
 
@@ -237,8 +230,6 @@ This project involved building and operating a production-style Kubernetes obser
 
   - **📚 Lesson Learned:**\
     In Kubernetes observability stacks, `ServiceMonitor.endpoints.port` must reference the Kubernetes Service port **name**, not the numeric container port. Aligning Service definitions and monitoring resources consistently helps avoid validation and synchronization failures.
-
----
 
 - ### 2.2 Prometheus Annotations Were Not Being Scraped
 
@@ -300,8 +291,6 @@ This project involved building and operating a production-style Kubernetes obser
 
   - **📚 Lesson Learned:**\
     Overly aggressive liveness probes can unintentionally trigger restart loops. Probe timings should always align with realistic application startup behavior, especially after introducing monitoring, sidecars, or exporters.
-
----
 
 ### 3. Loki Log Aggregation
 
@@ -377,8 +366,6 @@ This project involved building and operating a production-style Kubernetes obser
   - **📚 Lesson Learned:**\
     Log aggregation systems operating at cluster scale can quickly exhaust default Linux kernel watcher limits. Production-grade observability setups should include proactive tuning of `inotify` and file descriptor limits, especially when using node-level agents like Promtail that monitor large numbers of container log files.
 
----
-
 - ### 3.2 Loki + Promtail Centralized Logging Integration
 
   - **⚔️ Challenge:**\
@@ -429,8 +416,6 @@ This project involved building and operating a production-style Kubernetes obser
 
   - **📚 Lesson Learned:**\
     Centralized logging becomes significantly more powerful when logs are enriched with Kubernetes metadata. Proper relabeling and structured labeling strategies are critical for scalable observability, efficient querying, and operational visibility in production-grade Kubernetes environments.
-
----
 
 ### 4. Alerting Pipeline
 
@@ -502,8 +487,6 @@ This project involved building and operating a production-style Kubernetes obser
   - **📚 Lesson Learned:**\
     Operator-based Kubernetes platforms rely heavily on strict configuration validation before resource reconciliation. Even small YAML formatting issues, incomplete receiver definitions, or missing storage specifications can completely block deployment pipelines without immediately obvious errors. Understanding the reconciliation flow of Kubernetes Operators is critical for troubleshooting production-grade observability stacks.
 
----
-
 - ### 4.2 Alertmanager Status Columns Showing Blank
 
   - **⚔️ Challenge:**\
@@ -552,8 +535,6 @@ This project involved building and operating a production-style Kubernetes obser
   - **📚 Lesson Learned:**\
     *This troubleshooting process took nearly a full day and reinforced an important operational lesson: **Kubernetes UI/status output should always be validated against the actual runtime behavior of the system.***
 
----
-
 ### 5. Multi-Environment Monitoring
 
 - ### 5.1 Label-Based Multi-Environment Monitoring
@@ -598,142 +579,3 @@ This project involved building and operating a production-style Kubernetes obser
 
   - **📚 Lesson Learned:**\
     Consistent labeling is foundational for scalable observability. Environment-aware metadata should be standardized early in platform design to support efficient querying, operational clarity, and long-term maintainability across multi-environment Kubernetes deployments.
-
----
-
-### 6. GitOps CD with ArgoCD
-
-- ### 6.1 Architectural Refactor for GitOps Adoption
-
-  - **⚔️ Challenge:**\
-    Initial infrastructure provisioning relied on sequential Bash scripts for ArgoCD, applications, monitoring, and logging deployments. While functional during iterative development, the approach was not aligned with GitOps workflows.
-
-  - **🔍 Analysis:**\
-    To implement GitOps properly, ArgoCD needed to become the single deployment controller responsible for continuous reconciliation and application lifecycle management.
-
-  - **🧠 Root Cause:**\
-    The repository structure was originally optimized for imperative script-based deployments rather than declarative GitOps operations.
-
-  - **✅ Solution:**\
-    Refactored the repository architecture to support GitOps-driven deployments through ArgoCD.
-
-    **This enabled:**
-    - Declarative infrastructure and application management
-    - Cleaner deployment workflows
-    - Easier environment scalability
-    - Centralized synchronization via ArgoCD
-
-  - **📚 Lesson Learned:**\
-    Design repositories around the target operational model from the beginning. Retrofitting architecture later becomes significantly more expensive.
-
----
-
-- ### 6.2 ArgoCD Project Permission Segmentation
-
-  - **⚔️ Challenge:**\
-    All deployments were initially running under ArgoCD's default project with broad cluster-wide permissions. I wanted to implement stricter project isolation and resource scoping.
-
-  - **🔍 Analysis:**\
-    Production-grade GitOps requires separation between cluster-scoped and namespace-scoped resources to enforce security boundaries and reduce blast radius.
-
-  - **🧠 Root Cause:**\
-    The repository lacked architectural separation between infrastructure, platform, observability, and application layers, making Principle of Least Privilege (PoLP) implementation difficult.
-
-  - **✅ Solution:**\
-    Re-architected the repository into dedicated deployment layers:
-    - **Infrastructure Layer** → Kind, Terraform
-    - **Platform Layer** → ESO and shared platform services
-    - **Observability Layer** → Prometheus stack, exporters, logging
-    - **Application Layer** → Business applications and services
-
-      ![alt text](./screenshots/arch.jpg)
-
-    Implemented ArgoCD Projects with scoped permissions and controlled deployment boundaries.
-
-    **This enabled:**
-    - Principle of Least Privilege (PoLP)
-    - Clear separation of concerns
-    - Safer RBAC implementation
-    - Better dependency management between layers
-    - Production-grade GitOps organization
-
-  - **📚 Lesson Learned:**\
-    Strong architecture simplifies security, scalability, and operational control.
-
----
-
-- ### 6.3 Layered Deployment Synchronization Failure
-
-  - **⚔️ Challenge:**\
-    ArgoCD was deploying all layers simultaneously despite sync wave configuration. Applications eventually recovered through Kubernetes reconciliation, but deployment ordering was unreliable.
-
-  - **🔍 Analysis:**\
-    Sync waves alone were insufficient because ArgoCD could not accurately determine application health states during deployment.
-
-  - **🧠 Root Cause:**\
-    Custom applications lacked health checks, preventing ArgoCD from validating readiness before progressing to dependent layers.
-
-  - **✅ Solution:**\
-    Implemented custom Lua health checks for ArgoCD to enforce proper health validation and layered deployment sequencing.
-
-    **This enabled:**
-    - Deterministic deployment ordering
-    - Safer progressive rollouts
-    - Reduced deployment instability
-    - Reliable dependency-aware synchronization
-
-  - **📚 Lesson Learned:**\
-    Deployment orchestration is only as reliable as the health signals provided to the controller.
-
----
-
-- ### 6.4 Lua Health Checks Not Taking Effect
-
-  - **⚔️ Challenge:**\
-    After implementing Lua health checks, ArgoCD still continued deploying layers in parallel.
-
-  - **🔍 Analysis:**\
-    The Lua scripts were valid, but ArgoCD was not applying the updated health configurations.
-
-  - **🧠 Root Cause:**\
-    ArgoCD Repo Server and ArgoCD Server required restarts to reload the newly applied project configurations and Lua health scripts.
-
-  - **✅ Solution:**\
-    Updated the ArgoCD installation automation to automatically restart:
-    - ArgoCD Repo Server
-    - ArgoCD Server
-
-    after project and health configuration changes.
-
-    **This enabled:**
-    - Reliable health check enforcement
-    - Consistent layered deployments
-    - Fully automated configuration propagation
-
-  - **📚 Lesson Learned:**\
-    Configuration changes are ineffective unless the consuming services reload them correctly.
-
----
-
-- ### 6.5 ArgoCD ServiceMonitors Missing in Prometheus
-
-  - **⚔️ Challenge:**\
-    ArgoCD ServiceMonitors existed in Kubernetes but were not visible in Prometheus, resulting in missing metrics collection.
-
-  - **🔍 Analysis:**\
-    No immediate errors were visible. After reapplying configurations post-monitoring stack deployment, the ServiceMonitors appeared and metrics collection resumed.
-
-  - **🧠 Root Cause:**\
-    ArgoCD attempted to create ServiceMonitor resources before the Prometheus Operator CRDs were installed. Since the CRDs did not yet exist, Kubernetes silently ignored the resources.
-
-  - **✅ Solution:**\
-    Removed ServiceMonitor creation from the ArgoCD Helm values configuration and moved monitoring resources into the dedicated Observability layer. Deployment sequencing ensured ServiceMonitors were only applied after Prometheus Operator CRDs became available.
-
-    **This enabled:**
-    - Reliable Prometheus target discovery
-    - Stable metrics collection
-    - Proper dependency-aware resource deployment
-    - Cleaner observability architecture
-
-  - **📚 Lesson Learned:**\
-    CRD-dependent resources must only be deployed after their controllers and CRDs are fully available.
