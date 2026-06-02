@@ -4,15 +4,56 @@ Built a production-oriented PostgreSQL monitoring setup from scratch using Prome
 
 ## 📑 Table of Contents
 
-1. [Overview](#-overview)
-2. [Architecture](#️-architecture)
-3. [Core Features](#-core-features)
-4. [Implementation Highlights](#️-implementation-highlights)
-5. [Architectural Decisions](#-architectural-decisions)
-6. [Operational Outcomes](#-operational-outcomes)
-7. [Challenges & Solutions](#️-challenges-and-solutions)
-8. [Key Learnings](#-key-learnings)
-9. [Future Improvements](#-future-improvements)
+**🧭 Navigation:**
+
+- [Implementation Roadmap](#️-implementation-roadmap)
+- [Project Navigation](#-project-navigation)
+
+**📘 Project Documentation:**
+
+- [Overview](#-overview)
+- [Architecture](#️-architecture)
+- [Features](#-features)
+- [Core Implementation](#️-core-implementation)
+- [Architectural Decisions](#️-architectural-decisions)
+- [Challenges & Solutions](#️-challenges--solutions)
+- [Operational Outcomes](#-operational-outcomes)
+- [Key Learnings](#-key-learnings)
+- [Link Back](#-link-back)
+
+## 🗺️ Implementation Roadmap
+
+<p align="left">
+  <img src="../9-Observe.jpg" width="80%"/>
+</p>
+
+## 🔗 Project Navigation
+
+- [Root Directory](https://github.com/sonuparit/retail-store-reverse-engineered)
+
+### 📖 Understanding Phase
+
+- [Source Code Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/src-code)
+- [Architecture Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/architecture)
+- [Containerization (Docker)](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker)
+- [Docker Compose Orchestration](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker-compose)
+
+### ☸️ Kubernetes Implementation Phase
+
+- [Individual Service Testing](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test)
+  - [Carts](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/cart-dynamodb-test)
+  - [Catalog](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/catalog-test)
+  - [Checkout](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/checkout-test)
+  - [Orders](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/orders-postgreSQL-test)
+  - [UI](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/ui-test)
+- [Helm Templating](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helm-template)
+- [Full App Deployment via Helmfile](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helmfile-deploy)
+- [Multi-Environment GitOps via ArgoCD](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/argocd-deploy)
+
+### 📊 Production & Observability
+
+- [Monitoring & Observability](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/03-observability) ← (📍 You are here - PostgreSQL Section )
+- [Production-Grade GitOps Workflow](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work)
 
 ## 📖 Overview
 
@@ -27,7 +68,7 @@ This project implements PostgreSQL monitoring inside Kubernetes using `postgres-
 
 ![alt text](screenshots/Arch.jpg)
 
-## 🎯 Core Features
+## 🎯 Features
 
 This project demonstrates practical Kubernetes observability, monitoring automation, and production troubleshooting skills.
 
@@ -38,7 +79,7 @@ This project demonstrates practical Kubernetes observability, monitoring automat
 - Multi-environment monitoring strategy
 - Production debugging and troubleshooting
 
-## ⚙️ Implementation Highlights
+## ⚙️ Core Implementation
 
 1. Installed the monitoring stack using Helm with the `kube-prometheus-stack` chart
 
@@ -106,7 +147,7 @@ This project demonstrates practical Kubernetes observability, monitoring automat
     - **Grafana Dashboard ID:** `9628`
     - Dashboard commonly used for PostgreSQL monitoring with `postgres_exporter`
 
-## 🧠 Architectural Decisions
+## 🏛️ Architectural Decisions
 
 One of the major implementation decisions was selecting the correct exporter architecture for production-grade monitoring.
 
@@ -179,7 +220,7 @@ This implementation resulted in a reusable, GitOps-driven PostgreSQL monitoring 
 - Achieved environment-aware observability across `dev`, `stage`, and `prod`
 - Validated metrics visibility in Prometheus and Grafana
 
-## 🛠️ Challenges and Solutions
+## ⚔️ Challenges & Solutions
 
 ### 🔀 1. Kubernetes Service and Exporter Architecture Confusion
 
@@ -350,6 +391,15 @@ This implementation resulted in a reusable, GitOps-driven PostgreSQL monitoring 
 - **📚 Lesson Learned:**\
       Successful database connectivity alone is insufficient for observability workflows. Monitoring systems often require elevated read permissions to access internal performance and statistics views needed for production-grade telemetry collection.
 
+## 📈 Operational Outcomes
+
+- Established reusable PostgreSQL observability workflows for Kubernetes environments
+- Enabled automated metrics discovery and scraping using Prometheus Operator
+- Standardized monitoring deployments through Helm-based templating
+- Integrated observability into GitOps delivery pipelines with ArgoCD
+- Improved troubleshooting and fault isolation across multi-environment deployments
+- Achieved production-ready PostgreSQL visibility in Prometheus and Grafana
+
 ## 🎓 Key Learnings
 
 This project improved my understanding of Kubernetes monitoring architecture, Prometheus discovery workflows, and production-grade observability design.
@@ -362,11 +412,6 @@ This project improved my understanding of Kubernetes monitoring architecture, Pr
 - GitOps-based monitoring deployments
 - Fault isolation and monitoring reliability
 
-## 🚀 Future Improvements
+## 🔗 Link Back
 
-Moving forward, this setup will be extended with:
-
-1. Implement centralized logging using **`Loki`**
-2. Add alerting and notification integrations using **`Email/Slack`**
-3. Provision infrastructure using **`Terraform`**
-4. Fully automate the workflow from **`terraform apply`** to **application deployment**
+Go back to **Observability Layer** → [(here)](../)

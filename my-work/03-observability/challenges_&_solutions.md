@@ -1,15 +1,58 @@
 # 🚀 Observability layer Implementation
 
-Challenges and Solutions section only
+> [!NOTE]
+> Challenges and Solutions section only
 
-## 📑 Table of Contents [(Read full contect here)](./)
+## 📑 Table of Contents [(Read full contents here)](./)
 
-- [Challenges & Solutions](#️-challenges--solutions)
-  - [PostgreSQL Exporter](#1-postgresql-exporter)
-  - [Prometheus Metrics Collection](#2-prometheus-metrics-collection)
-  - [Loki Log Aggregation](#3-loki-log-aggregation)
-  - [Alerting Pipeline](#4-alerting-pipeline)
-  - [Multi-Environment Monitoring](#5-multi-environment-monitoring)
+**🧭 Navigation:**
+
+- [Implementation Roadmap](#️-implementation-roadmap)
+- [Project Navigation](#-project-navigation)
+
+**📘 Challenges & Solutions Section :**
+
+- [PostgreSQL Exporter](#1-postgresql-exporter)
+- [Prometheus Metrics Collection](#2-prometheus-metrics-collection)
+- [Loki Log Aggregation](#3-loki-log-aggregation)
+- [Alerting Pipeline](#4-alerting-pipeline)
+- [Multi-Environment Monitoring](#5-multi-environment-monitoring)
+
+[Link Back](#-link-back)
+
+## 🗺️ Implementation Roadmap
+
+<p align="left">
+  <img src="./9-Observe.jpg" width="80%"/>
+</p>
+
+## 🔗 Project Navigation
+
+- [Root Directory](https://github.com/sonuparit/retail-store-reverse-engineered)
+
+### 📖 Understanding Phase
+
+- [Source Code Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/src-code)
+- [Architecture Understanding](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/architecture)
+- [Containerization (Docker)](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker)
+- [Docker Compose Orchestration](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/docker-compose)
+
+### ☸️ Kubernetes Implementation Phase
+
+- [Individual Service Testing](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test)
+  - [Carts](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/cart-dynamodb-test)
+  - [Catalog](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/catalog-test)
+  - [Checkout](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/checkout-test)
+  - [Orders](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/orders-postgreSQL-test)
+  - [UI](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/ind-svc-test/ui-test)
+- [Helm Templating](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helm-template)
+- [Full App Deployment via Helmfile](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/helmfile-deploy)
+- [Multi-Environment GitOps via ArgoCD](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/04-applications/kubernetes/argocd-deploy)
+
+### 📊 Production & Observability
+
+- [Monitoring & Observability](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work/03-observability) ← (📍 You are here ) - Challenges and Solutions
+- [Production-Grade GitOps Workflow](https://github.com/sonuparit/retail-store-reverse-engineered/tree/main/my-work)
 
 ## ⚔️ Challenges & Solutions
 
@@ -579,3 +622,7 @@ This project involved building and operating a production-style Kubernetes obser
 
   - **📚 Lesson Learned:**\
     Consistent labeling is foundational for scalable observability. Environment-aware metadata should be standardized early in platform design to support efficient querying, operational clarity, and long-term maintainability across multi-environment Kubernetes deployments.
+
+## 🔗 Link Back
+
+Go back to **Observability Layer** → [(here)](./)
