@@ -166,7 +166,7 @@ The repository is organized into layered operational domains to improve scalabil
 This section walks through deploying the full multi-environment GitOps setup on a kind Kubernetes cluster running on EC2.
 
 > [!NOTE]
-> Kind was used for cost-efficient local Kubernetes simulation and rapid environment iteration.
+> Kind was used for cost-efficient local Kubernetes simulation and rapid environment iteration. For Terraform provisioned EKS and FULL CI/CD of the application [(see here)]((https://github.com/sonuparit/terraform-gitops-pipeline))
 
 ### Prerequisites
 
@@ -228,27 +228,25 @@ Steps:
 4. Validate:
 
     - ArgoCD synchronization
-    - Kubernetes reconciliation
-    - Secret injection
-    - Persistent storage
-    - Metrics collection
-    - Centralized logging
+
     - Multi-environment isolation
-    - End-to-end Application operational validation
 
-      ![alt text](screenshots/ss50.png)
+        ![alt text](screenshots/ss81.png)
 
-      ![alt text](screenshots/ss81.png)
-
-      ![alt text](screenshots/ss25.png)
+    - Kubernetes reconciliation
+    - Metrics collection
 
       ![alt text](screenshots/ss37.png)
 
-      ![alt text](screenshots/ss44.png)
-
       ![alt text](screenshots/ss89.png)
 
+    - Centralized logging
+
       ![alt text](screenshots/ss102.png)
+
+    - End-to-end Application operational validation
+
+      ![alt text](screenshots/ss50.png)
 
 ## 🎯 Features
 

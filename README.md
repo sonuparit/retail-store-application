@@ -122,7 +122,7 @@ The implementation emphasizes real-world DevOps engineering challenges including
 ### 5. 📊 Observability & Production Operations
 
 - Implemented production-grade monitoring using Prometheus, Grafana, Loki, Alertmanager  and exporters
-- Built reusable observability workflows for Kubernetes workloads
+- Built environment/workload aware reusable observability workflows for Kubernetes workloads
 - Improved operational visibility, troubleshooting, and deployment reliability
 
 ## 📸 Operational Screenshots
@@ -143,11 +143,15 @@ Custom ApplicationSet orchestration and Lua-based deployment health synchronizat
 
 ### 3. 📊 Monitoring & Observability
 
-Infrastructure and PostgreSQL monitoring using Prometheus, Grafana, exporters, and ServiceMonitors.
+Infrastructure and apps monitoring using Prometheus, Grafana, exporters, and ServiceMonitors.
 
-![image](./screenshots/ss04.png)
+![image](./screenshots/ss98.png)
 
-![image](./screenshots/ss06.jpg)
+![image](./screenshots/ss47.png)
+
+Validated environment-aware and application-specific log aggregation workflows for streamlined troubleshooting and operational visibility.
+
+![image](./screenshots/ss100.png)
 
 ### 4. 🔔 Operational Alerting
 
