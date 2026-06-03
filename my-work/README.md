@@ -166,7 +166,7 @@ The repository is organized into layered operational domains to improve scalabil
 This section walks through deploying the full multi-environment GitOps setup on a kind Kubernetes cluster running on EC2.
 
 > [!NOTE]
-> Kind was used for cost-efficient local Kubernetes simulation and rapid environment iteration. For Terraform provisioned EKS and FULL CI/CD of the application [(see here)]((https://github.com/sonuparit/terraform-gitops-pipeline))
+> Kind was used for cost-efficient local Kubernetes simulation and rapid environment iteration. For Terraform provisioned EKS and FULL CI/CD of the application [(see here)](https://github.com/sonuparit/terraform-gitops-pipeline)
 
 ### Prerequisites
 
