@@ -21,6 +21,7 @@ The implementation emphasizes real-world DevOps engineering challenges including
 - [Operational Screenshots](#-operational-screenshots)
 - [Deployment Guide](#-deployment-guide)
 - [Future Improvements](#-future-improvements)
+- [Acknowledgments](#-acknowledgments)
 
 ## 🛠️ Tech Stack & Ecosystem
 
@@ -174,8 +175,18 @@ Validated full application functionality after Kubernetes and GitOps deployment 
 | [Helmfile Deployment](./my-work/04-applications/kubernetes/helmfile-deploy/)    | Full application deployment using modular Helm orchestration |
 | [ArgoCD Production Workflow](./my-work/)                               | End-to-end production-grade deployment          |
 
-## ⭐ Future Improvements
+## 🤖 Future Improvements
 
-- Transition to EKS
-- GitOps CI Pipeline
-- IaC via Terraform
+- EKS migration
+- Terraform-based provisioning
+- Full GitOps CI/CD
+- Different Deployment strategies
+- Automated Rollback
+- Disaster Recovery
+- Terraform Remote State + Locking
+- Fully automate infrastructure and application delivery processes
+
+## 🙏 Acknowledgments
+
+- **AWS Containers Team** for the original sample application
+- **ArgoCD Community** for the excellent GitOps tooling

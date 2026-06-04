@@ -26,7 +26,6 @@ This project implements a production-oriented Kubernetes platform focused on Git
 - [Operational Outcomes](#-operational-outcomes)
 - [Key Learnings](#-key-learnings)
 - [Future Improvements](#-future-improvements)
-- [Acknowledgments](#-acknowledgments)
 
 ## 🗺️ Implementation Roadmap
 
@@ -574,13 +573,3 @@ Steps:
 - EKS migration
 - Terraform-based provisioning
 - Full GitOps CI/CD
-- Different Deployment strategies
-- Automated Rollback
-- Disaster Recovery
-- Terraform Remote State + Locking
-- Fully automate infrastructure and application delivery processes
-
-## 🙏 Acknowledgments
-
-- **AWS Containers Team** for the original sample application
-- **ArgoCD Community** for the excellent GitOps tooling
