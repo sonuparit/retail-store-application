@@ -1,4 +1,4 @@
-# 🚀 Productionizing a Microservices Application (Reverse-Engineered)
+# 🚀 Productionizing a Microservices Application (Docker: Reverse-Engineered)
 
 > [!NOTE]
 > This project is based on an existing application that I reverse-engineered and enhanced → [(original repo)](https://github.com/aws-containers/retail-store-sample-app).
