@@ -1,7 +1,7 @@
 # 🚀 Productionizing a Microservices Application
 
 > [!NOTE]
-> This project is based on an existing application that I reverse-engineered and enhanced → [(original repo)](https://github.com/aws-containers/retail-store-sample-app).
+> This project is based on an existing application that I reverse-engineered (application source code and docker) and enhanced → [(original repo)](https://github.com/aws-containers/retail-store-sample-app).
 
 > [!NOTE]
 > Beyond this implementation, the Application layer of the project was deployed on AWS EKS Auto Mode, Terraform-provisioned infrastructure, and full ArgoCD-driven GitOps CI/CD workflows → [(View Implementation)](https://github.com/sonuparit/terraform-gitops-pipeline).
